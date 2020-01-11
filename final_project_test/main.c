@@ -288,15 +288,15 @@ void game_init(void) {
         game_abort("failed to load image: settings2.png");
 
 	/* Start Scene resources*/
-	start_img_background = load_bitmap_resized("start-bg.jpg", SCREEN_W, SCREEN_H);
+	start_img_background = load_bitmap_resized("moonbackground_0.jpg", SCREEN_W, SCREEN_H);
 
 	start_img_plane = al_load_bitmap("plane.png");
 	if (!start_img_plane)
 		game_abort("failed to load image: plane.png");
 
-	start_img_enemy = al_load_bitmap("smallfighter0006.png");
+	start_img_enemy = al_load_bitmap("asteroid_50.png");
 	if (!start_img_enemy)
-		game_abort("failed to load image: smallfighter0006.png");
+		game_abort("failed to load image: asteroid_50.png");
 
 	start_bgm = al_load_sample("mythica.ogg");
 	if (!start_bgm)

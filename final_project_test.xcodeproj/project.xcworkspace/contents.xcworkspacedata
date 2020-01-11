@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:final_project_test.xcodeproj">
+      location = "group:/Users/tJuan/Desktop/final_project/asteroid.png">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/tJuan/Desktop/final_project/asteroid_50.png">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>
