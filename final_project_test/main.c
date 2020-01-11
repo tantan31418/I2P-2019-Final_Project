@@ -11,6 +11,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <math.h>
+#include <string.h>
 
 // If defined, logs will be shown on console and written to file.
 // If commented out, logs will not be shown nor be saved.
@@ -110,6 +111,7 @@ void draw_movable_object(MovableObject obj);
 // Uncomment and fill in the code below.
 //反正就先用4個子彈看看囉
 #define MAX_BULLET 8
+#define MAX_TEXT 100
 MovableObject plane;
 int human_blood=5;
 int moon_blood=10;
@@ -530,7 +532,13 @@ void game_draw(void) {
 		draw_movable_object(plane);
 		for (i = 0; i < MAX_ENEMY; i++)
 			draw_movable_object(enemies[i]);
+        char humanblood[MAX_TEXT]="Blood:";
+        char buff[MAX_TEXT]="";
+        sprintf(buff,"%d", human_blood);
+        strcat(humanblood, buff);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, humanblood);
 	}
+    
 	// [HACKATHON 3-9]done
 	// TODO: If active_scene is SCENE_SETTINGS.
 	// Draw anything you want, or simply clear the display.
