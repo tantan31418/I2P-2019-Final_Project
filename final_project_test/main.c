@@ -31,11 +31,12 @@ const int RESERVE_SAMPLES = 4;
 // const int SCENE_START = 2;
 enum {
 	SCENE_MENU = 1,
-	SCENE_START = 2
+	SCENE_START = 2,
 	// [HACKATHON 3-7] done
 	// TODO: Declare a new scene id.
     //只是uncomment,可能是把第三個叫做settings
-     , SCENE_SETTINGS = 3
+    SCENE_SETTINGS = 3,
+    H_DEAD_GAMEOVER = 4
 };
 
 /* Input states */
@@ -110,6 +111,8 @@ void draw_movable_object(MovableObject obj);
 //反正就先用4個子彈看看囉
 #define MAX_BULLET 8
 MovableObject plane;
+int human_blood=5;
+int moon_blood=10;
 MovableObject enemies[MAX_ENEMY];
 // [HACKATHON 2-3]done
 // TODO: Declare an array to store bullets with size of max bullet count.
@@ -448,6 +451,12 @@ void game_update(void) {
                 plane.x = 400;
                 plane.y = 500;
                 plane.hidden=false;
+                //bug:if stay at home will still repeat count
+                human_blood--;
+                if(human_blood==0){
+                    game_log("all human are dead");
+                    game_change_scene(H_DEAD_GAMEOVER);
+                }
                 
             }
             //enemy hit sceen down
@@ -482,6 +491,13 @@ void game_update(void) {
             }
         }
 	}
+    else if (active_scene == SCENE_SETTINGS){
+        
+    }
+    else if (active_scene == H_DEAD_GAMEOVER){
+        
+    }
+    
 }
 
 void game_draw(void) {
@@ -501,7 +517,8 @@ void game_draw(void) {
             al_draw_bitmap(img_settings2, SCREEN_W-48, 10, 0);
         else
             al_draw_bitmap(img_settings, SCREEN_W-48, 10, 0);
-	} else if (active_scene == SCENE_START) {
+	}
+    else if (active_scene == SCENE_START) {
 		int i;
 		al_draw_bitmap(start_img_background, 0, 0, 0);
 		// [HACKATHON 2-9]done
@@ -520,6 +537,9 @@ void game_draw(void) {
     //佈置切換到settings頁面的樣子，照著打就是變全黑
     else if (active_scene == SCENE_SETTINGS) {
         al_clear_to_color(al_map_rgb(0, 0, 0));
+    }
+    else if (active_scene == H_DEAD_GAMEOVER){
+        al_clear_to_color(al_map_rgb(255, 0, 0));
     }
 	al_flip_display();
 }
