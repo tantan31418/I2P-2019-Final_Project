@@ -98,6 +98,8 @@ typedef struct {
 	bool hidden;
 	// The pointer to the object’s image.
 	ALLEGRO_BITMAP* img;
+    //hit count
+    int hit_cnt;
 } MovableObject;
 void draw_movable_object(MovableObject obj);
 #define MAX_ENEMY 8
@@ -414,10 +416,16 @@ void game_update(void) {
             //bullet collide enemy
             for (int j=0;j<MAX_ENEMY;j++){
                 if(bullets[i].x>enemies[j].x-enemies[j].w/2&&bullets[i].x<enemies[j].x+enemies[j].w/2&&bullets[i].y>enemies[j].y-enemies[j].h/2&&bullets[i].y<enemies[j].y+enemies[j].h/2){
+                    
+                    enemies[j].hit_cnt++;
                     bullets[i].hidden=true;
-                    enemies[j].hidden=true;
-                    game_log("collide");
-                    break;
+                    game_log("bullet hit enemy at %d %d hit count%d",bullets[i].x,bullets[i].y,enemies[j].hit_cnt);
+                    //hit count prints weird numbers but function correctly
+                    if(enemies[j].hit_cnt==3){
+                        enemies[j].hit_cnt=0;
+                        enemies[j].hidden=true;
+                        break;
+                    }
                 }
             }
         }
@@ -561,6 +569,7 @@ void game_change_scene(int next_scene) {
 		plane.y = 500;
 		plane.w = al_get_bitmap_width(plane.img);
         plane.h = al_get_bitmap_height(plane.img);
+        plane.hit_cnt=0;
 		for (i = 0; i < MAX_ENEMY; i++) {
 			enemies[i].img = start_img_enemy;
 			enemies[i].w = al_get_bitmap_width(start_img_enemy);
@@ -568,6 +577,8 @@ void game_change_scene(int next_scene) {
 			enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
 			enemies[i].y = 80;
             enemies[i].vy=(rand()%10000)*0.0002;
+            enemies[i].hit_cnt=0;
+            game_log("init enemy%d hit count=%d",i,enemies[i].hit_cnt);
 		}
 		// [HACKATHON 2-6]done
 		// TODO: Initialize bullets.
@@ -583,6 +594,7 @@ void game_change_scene(int next_scene) {
             bullets[i].vx = 0;
             bullets[i].vy = -3;
             bullets[i].hidden = true;
+            bullets[i].hit_cnt=0;
         }
 		if (!al_play_sample(start_bgm, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &start_bgm_id))
 			game_abort("failed to play audio (bgm)");
