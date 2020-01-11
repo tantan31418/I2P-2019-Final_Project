@@ -440,6 +440,17 @@ void game_update(void) {
             }
 //            enemies[i].vy=enemies[i].vy*1.00001;
             enemies[i].y += enemies[i].vy;
+            //enemy collide plane
+            if(plane.x>enemies[i].x-enemies[i].w/2&&plane.x<enemies[i].x+enemies[i].w/2&&plane.y>enemies[i].y-enemies[i].h/2&&plane.y<enemies[i].y+enemies[i].h/2){
+                plane.hit_cnt++;
+                game_log("plane hit count=%d",plane.hit_cnt);
+                plane.hidden=true;
+                plane.x = 400;
+                plane.y = 500;
+                plane.hidden=false;
+                
+            }
+            //enemy hit sceen down
             if (enemies[i].x > SCREEN_W || enemies[i].y>SCREEN_H)
                 enemies[i].hidden = true;
         }
