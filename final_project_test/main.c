@@ -104,17 +104,18 @@ typedef struct {
     int hit_cnt;
 } MovableObject;
 void draw_movable_object(MovableObject obj);
-#define MAX_ENEMY 8
+#define MAX_ENEMY 6
 // [HACKATHON 2-2] done
 // TODO: Declare the max bullet count that will show on screen.
 // You can try max 4 bullets here and see if you needed more.
 // Uncomment and fill in the code below.
 //反正就先用4個子彈看看囉
-#define MAX_BULLET 8
+#define MAX_BULLET 6
 #define MAX_TEXT 100
 MovableObject plane;
 int human_blood=5;
 int moon_blood=10;
+int score=0;
 MovableObject enemies[MAX_ENEMY];
 // [HACKATHON 2-3]done
 // TODO: Declare an array to store bullets with size of max bullet count.
@@ -429,6 +430,7 @@ void game_update(void) {
                     if(enemies[j].hit_cnt==3){
                         enemies[j].hit_cnt=0;
                         enemies[j].hidden=true;
+                        score++;
                         break;
                     }
                 }
@@ -462,8 +464,14 @@ void game_update(void) {
                 
             }
             //enemy hit sceen down
-            if (enemies[i].x > SCREEN_W || enemies[i].y>SCREEN_H)
+            if (enemies[i].x > SCREEN_W || enemies[i].y>SCREEN_H){
                 enemies[i].hidden = true;
+                moon_blood--;
+                if(moon_blood==0){
+                    game_log("moon is dead");
+                    game_change_scene(H_DEAD_GAMEOVER); //temp
+                }
+            }
         }
 
 		// [HACKATHON 2-8]done
@@ -532,11 +540,24 @@ void game_draw(void) {
 		draw_movable_object(plane);
 		for (i = 0; i < MAX_ENEMY; i++)
 			draw_movable_object(enemies[i]);
-        char humanblood[MAX_TEXT]="Blood:";
+        //human blood bar
+        char humanblood[MAX_TEXT]="Human Blood:";
         char buff[MAX_TEXT]="";
         sprintf(buff,"%d", human_blood);
         strcat(humanblood, buff);
         al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, humanblood);
+        //score
+        char score_text[MAX_TEXT]="Score:";
+        char buff2[MAX_TEXT]="";
+        sprintf(buff2,"%d", score);
+        strcat(score_text, buff2);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), SCREEN_W-200, 30, 0, score_text);
+        //mooon blood bar
+        char moon_text[MAX_TEXT]="Moon Blood:";
+        char buff3[MAX_TEXT]="";
+        sprintf(buff3,"%d", moon_blood);
+        strcat(moon_text, buff3);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 100, 0, moon_text);
 	}
     
 	// [HACKATHON 3-9]done
