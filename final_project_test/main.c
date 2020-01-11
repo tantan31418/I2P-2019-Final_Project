@@ -68,6 +68,7 @@ ALLEGRO_FONT* font_pirulen_24;
 
 /* Menu Scene resources*/
 ALLEGRO_BITMAP* main_img_background;
+ALLEGRO_BITMAP* human_gameover_background;
 // [HACKATHON 3-1] done
 // TODO: Declare 2 variables for storing settings images.
 // Uncomment and fill in the code below.
@@ -270,7 +271,7 @@ void game_init(void) {
 
 	/* Menu Scene resources*/
 	main_img_background = load_bitmap_resized("main-bg.jpg", SCREEN_W, SCREEN_H);
-
+    human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
 	main_bgm = al_load_sample("S31-Night Prowler.ogg");
 	if (!main_bgm)
 		game_abort("failed to load audio: S31-Night Prowler.ogg");
@@ -290,7 +291,7 @@ void game_init(void) {
 	/* Start Scene resources*/
 	start_img_background = load_bitmap_resized("moonbackground_0.jpg", SCREEN_W, SCREEN_H);
 
-	start_img_plane = al_load_bitmap("plane.png");
+	start_img_plane = al_load_bitmap("icons8-lunar-lander-64.png");
 	if (!start_img_plane)
 		game_abort("failed to load image: plane.png");
 
@@ -568,7 +569,11 @@ void game_draw(void) {
         al_clear_to_color(al_map_rgb(0, 0, 0));
     }
     else if (active_scene == H_DEAD_GAMEOVER){
-        al_clear_to_color(al_map_rgb(255, 0, 0));
+        al_draw_bitmap(human_gameover_background, 0, 0, 0);
+        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "YOU ARE DEAD!");
+        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+30, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
+        
+        
     }
 	al_flip_display();
 }
@@ -624,6 +629,10 @@ void game_change_scene(int next_scene) {
 			game_abort("failed to play audio (bgm)");
 	} else if (active_scene == SCENE_START) {
 		int i;
+        //init blood
+        moon_blood=10;
+        human_blood=5;
+        
 		plane.img = start_img_plane;
 		plane.x = 400;
 		plane.y = 500;
@@ -666,6 +675,10 @@ void on_key_down(int keycode) {
 		if (keycode == ALLEGRO_KEY_ENTER)
 			game_change_scene(SCENE_START);
 	}
+    else if (active_scene == H_DEAD_GAMEOVER) {
+        if (keycode == ALLEGRO_KEY_ENTER)
+            game_change_scene(SCENE_START);
+    }
 }
 
 void on_mouse_down(int btn, int x, int y) {
