@@ -100,7 +100,7 @@ typedef struct {
 	ALLEGRO_BITMAP* img;
 } MovableObject;
 void draw_movable_object(MovableObject obj);
-#define MAX_ENEMY 3
+#define MAX_ENEMY 8
 // [HACKATHON 2-2] done
 // TODO: Declare the max bullet count that will show on screen.
 // You can try max 4 bullets here and see if you needed more.
@@ -220,7 +220,7 @@ void allegro5_init(void) {
 	game_display = al_create_display(SCREEN_W, SCREEN_H);
 	if (!game_display)
 		game_abort("failed to create display");
-	al_set_window_title(game_display, "I2P(I)_2019 Final Project <student_id>");
+	al_set_window_title(game_display, "I2P(I)_2019 Final Project <108062208>");
 
 	// Setup update timer.
 	game_update_timer = al_create_timer(1.0f / FPS);
@@ -412,6 +412,20 @@ void game_update(void) {
             if (bullets[i].x < 0 || bullets[i].y<0)
                 bullets[i].hidden = true;
         }
+        //Update enemy coordinates
+        for (i=0;i<MAX_ENEMY;i++) {
+            if (enemies[i].hidden){
+                if(rand()>10000){
+                enemies[i].hidden=false;
+                enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
+                enemies[i].y = 80;
+                enemies[i].vy=(rand()%10000)*0.0002;}
+            }
+//            enemies[i].vy=enemies[i].vy*1.00001;
+            enemies[i].y += enemies[i].vy;
+            if (enemies[i].x > SCREEN_W || enemies[i].y>SCREEN_H)
+                enemies[i].hidden = true;
+        }
 
 		// [HACKATHON 2-8]done
 		// TODO: Shoot if key is down and cool-down is over.
@@ -544,6 +558,7 @@ void game_change_scene(int next_scene) {
 			enemies[i].h = al_get_bitmap_height(start_img_enemy);
 			enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
 			enemies[i].y = 80;
+            enemies[i].vy=(rand()%10000)*0.0002;
 		}
 		// [HACKATHON 2-6]done
 		// TODO: Initialize bullets.
