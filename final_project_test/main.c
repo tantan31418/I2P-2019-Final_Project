@@ -106,7 +106,7 @@ void draw_movable_object(MovableObject obj);
 // You can try max 4 bullets here and see if you needed more.
 // Uncomment and fill in the code below.
 //反正就先用4個子彈看看囉
-#define MAX_BULLET 4
+#define MAX_BULLET 8
 MovableObject plane;
 MovableObject enemies[MAX_ENEMY];
 // [HACKATHON 2-3]done
@@ -411,6 +411,15 @@ void game_update(void) {
             bullets[i].y += bullets[i].vy;//???
             if (bullets[i].x < 0 || bullets[i].y<0)
                 bullets[i].hidden = true;
+            //bullet collide enemy
+            for (int j=0;j<MAX_ENEMY;j++){
+                if(bullets[i].x>enemies[j].x-enemies[j].w/2&&bullets[i].x<enemies[j].x+enemies[j].w/2&&bullets[i].y>enemies[j].y-enemies[j].h/2&&bullets[i].y<enemies[j].y+enemies[j].h/2){
+                    bullets[i].hidden=true;
+                    enemies[j].hidden=true;
+                    game_log("collide");
+                    break;
+                }
+            }
         }
         //Update enemy coordinates
         for (i=0;i<MAX_ENEMY;i++) {
