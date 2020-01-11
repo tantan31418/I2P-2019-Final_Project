@@ -37,7 +37,8 @@ enum {
 	// TODO: Declare a new scene id.
     //只是uncomment,可能是把第三個叫做settings
     SCENE_SETTINGS = 3,
-    H_DEAD_GAMEOVER = 4
+    H_DEAD_GAMEOVER = 4,
+    M_DEAD_GAMEOVER = 5
 };
 
 /* Input states */
@@ -69,6 +70,7 @@ ALLEGRO_FONT* font_pirulen_24;
 /* Menu Scene resources*/
 ALLEGRO_BITMAP* main_img_background;
 ALLEGRO_BITMAP* human_gameover_background;
+ALLEGRO_BITMAP* moon_gameover_background;
 // [HACKATHON 3-1] done
 // TODO: Declare 2 variables for storing settings images.
 // Uncomment and fill in the code below.
@@ -272,6 +274,7 @@ void game_init(void) {
 	/* Menu Scene resources*/
 	main_img_background = load_bitmap_resized("main-bg.jpg", SCREEN_W, SCREEN_H);
     human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
+    moon_gameover_background = al_load_bitmap("moondying.jpg");
 	main_bgm = al_load_sample("S31-Night Prowler.ogg");
 	if (!main_bgm)
 		game_abort("failed to load audio: S31-Night Prowler.ogg");
@@ -470,7 +473,7 @@ void game_update(void) {
                 moon_blood--;
                 if(moon_blood==0){
                     game_log("moon is dead");
-                    game_change_scene(H_DEAD_GAMEOVER); //temp
+                    game_change_scene(M_DEAD_GAMEOVER); //temp
                 }
             }
         }
@@ -506,6 +509,9 @@ void game_update(void) {
         
     }
     else if (active_scene == H_DEAD_GAMEOVER){
+        
+    }
+    else if (active_scene == M_DEAD_GAMEOVER){
         
     }
     
@@ -571,10 +577,14 @@ void game_draw(void) {
     else if (active_scene == H_DEAD_GAMEOVER){
         al_draw_bitmap(human_gameover_background, 0, 0, 0);
         al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "YOU ARE DEAD!");
-        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+30, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
-        
-        
+        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
     }
+    else if (active_scene == M_DEAD_GAMEOVER){
+        al_draw_bitmap(moon_gameover_background, 0, 0, 0);
+        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "THE MOON IS DESTROYED!");
+        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
+    }
+    
 	al_flip_display();
 }
 
@@ -676,6 +686,10 @@ void on_key_down(int keycode) {
 			game_change_scene(SCENE_START);
 	}
     else if (active_scene == H_DEAD_GAMEOVER) {
+        if (keycode == ALLEGRO_KEY_ENTER)
+            game_change_scene(SCENE_START);
+    }
+    else if (active_scene == M_DEAD_GAMEOVER) {
         if (keycode == ALLEGRO_KEY_ENTER)
             game_change_scene(SCENE_START);
     }
