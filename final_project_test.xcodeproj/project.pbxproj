@@ -20,6 +20,9 @@
 		B205FAD923CB250A00312C92 /* chosechar.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAD823CB250A00312C92 /* chosechar.png */; };
 		B205FADC23CB2C2C00312C92 /* tl_line.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FADA23CB2C2C00312C92 /* tl_line.png */; };
 		B205FADD23CB2C2C00312C92 /* ll_line.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FADB23CB2C2C00312C92 /* ll_line.png */; };
+		B205FADF23CB748000312C92 /* moonbackground_red.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FADE23CB748000312C92 /* moonbackground_red.png */; };
+		B205FAE123CB7B5900312C92 /* ufo.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAE023CB7B5900312C92 /* ufo.png */; };
+		B205FAE323CB91BF00312C92 /* winastronaut.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAE223CB91BF00312C92 /* winastronaut.png */; };
 		B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22561A423A4C77B0035BB7F /* Assets.xcassets */; };
 		B22561A823A4C77B0035BB7F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22561A623A4C77B0035BB7F /* MainMenu.xib */; };
 		B22561DA23A4C8720035BB7F /* liballegro_dialog.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B22561B323A4C8710035BB7F /* liballegro_dialog.5.2.dylib */; };
@@ -88,6 +91,9 @@
 		B205FAD823CB250A00312C92 /* chosechar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chosechar.png; path = final_project_test/chosechar.png; sourceTree = "<group>"; };
 		B205FADA23CB2C2C00312C92 /* tl_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tl_line.png; path = final_project_test/tl_line.png; sourceTree = "<group>"; };
 		B205FADB23CB2C2C00312C92 /* ll_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ll_line.png; path = final_project_test/ll_line.png; sourceTree = "<group>"; };
+		B205FADE23CB748000312C92 /* moonbackground_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moonbackground_red.png; path = final_project_test/moonbackground_red.png; sourceTree = "<group>"; };
+		B205FAE023CB7B5900312C92 /* ufo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ufo.png; path = final_project_test/ufo.png; sourceTree = "<group>"; };
+		B205FAE223CB91BF00312C92 /* winastronaut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = winastronaut.png; path = final_project_test/winastronaut.png; sourceTree = "<group>"; };
 		B225619E23A4C77A0035BB7F /* final_project_test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = final_project_test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22561A423A4C77B0035BB7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B22561A723A4C77B0035BB7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -198,9 +204,11 @@
 		B225619523A4C77A0035BB7F = {
 			isa = PBXGroup;
 			children = (
+				B205FAE223CB91BF00312C92 /* winastronaut.png */,
 				B205FAD423CB16AD00312C92 /* coverjpg.jpg */,
 				B205FACE23CA2DFD00312C92 /* lunar_lander.png */,
 				B205FAC023CA130000312C92 /* moon_dead.jpg */,
+				B205FAE023CB7B5900312C92 /* ufo.png */,
 				B205FAB823C9E4DC00312C92 /* asteroid_50.png */,
 				B205FABA23C9F14000312C92 /* icons8-lunar-lander-64.png */,
 				B225620123A4C8AC0035BB7F /* main.c */,
@@ -211,6 +219,7 @@
 				B205FAD023CAF29C00312C92 /* iss.png */,
 				B205FAC423CA184C00312C92 /* moondying.jpg */,
 				B205FAB223C9DBBC00312C92 /* moonbackground_0.jpg */,
+				B205FADE23CB748000312C92 /* moonbackground_red.png */,
 				B205FABC23C9FD6600312C92 /* gameover_human.jpg */,
 				B225620723A5D11A0035BB7F /* image12.png */,
 				B225620823A5D11A0035BB7F /* main-bg.jpg */,
@@ -356,6 +365,7 @@
 				B205FAB923C9E4DC00312C92 /* asteroid_50.png in Resources */,
 				B205FAD523CB16AE00312C92 /* coverjpg.jpg in Resources */,
 				B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */,
+				B205FAE323CB91BF00312C92 /* winastronaut.png in Resources */,
 				B225621823A5D11B0035BB7F /* S31-Night Prowler.ogg in Resources */,
 				B205FACF23CA2DFD00312C92 /* lunar_lander.png in Resources */,
 				B225621423A5D11B0035BB7F /* mythica.ogg in Resources */,
@@ -374,6 +384,8 @@
 				B205FABD23C9FD6700312C92 /* gameover_human.jpg in Resources */,
 				B205FADC23CB2C2C00312C92 /* tl_line.png in Resources */,
 				B205FAC123CA130000312C92 /* moon_dead.jpg in Resources */,
+				B205FAE123CB7B5900312C92 /* ufo.png in Resources */,
+				B205FADF23CB748000312C92 /* moonbackground_red.png in Resources */,
 				B205FAD923CB250A00312C92 /* chosechar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
