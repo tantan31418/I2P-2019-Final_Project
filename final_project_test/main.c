@@ -483,7 +483,7 @@ void game_draw(void) {
 //        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER, "Space Shooter");
 //        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, "Press enter key to start");
 		
-        if (pnt_in_rect(mouse_x, mouse_y, SCREEN_W-48, 10, 38, 38)){
+        if (pnt_in_rect(mouse_x, mouse_y, SCREEN_W-48, 10, SCREEN_W-10, 48)){
 //            game_log("pnt in rect draw imgsetting2");
             al_draw_bitmap(img_settings2, SCREEN_W-48, 10, 0);
         }
@@ -533,11 +533,11 @@ void game_draw(void) {
         al_draw_bitmap(settings_choose_char, 0, 0, 0);
         
         // lunar lander white line 144 197
-        if (pnt_in_rect(mouse_x, mouse_y, 151, 205, 136, 170)){
+        if (pnt_in_rect(mouse_x, mouse_y, 151, 205, 299, 381)){
             al_draw_bitmap(ll_line, 144, 197, 0);
         }
         // telescope 494 205
-        else if (pnt_in_rect(mouse_x, mouse_y, 500, 220, 135, 130)){
+        else if (pnt_in_rect(mouse_x, mouse_y, 500, 220, 635, 350)){
             al_draw_bitmap(tl_line, 494, 205, 0);
         }
     }
@@ -689,19 +689,19 @@ void on_mouse_down(int btn, int x, int y) {
     // 從上面的code(event loop那裡) 可以看到會傳mouse event給btn，如果event.mouse.button==1代表左鍵點下去，可參考task5，所以點下去的時候就是要切換到settings
     if (active_scene == SCENE_MENU) {
         if (btn == 1) {
-            if (pnt_in_rect(x, y, SCREEN_W-48, 10, 38, 38))
+            if (pnt_in_rect(x, y, SCREEN_W-48, 10, SCREEN_W-18, 48))
                 game_change_scene(SCENE_SETTINGS);
         }
     }
     else if (active_scene == SCENE_SETTINGS){
         if (btn == 1){
             // lunar lander
-            if (pnt_in_rect(x, y, 151, 205, 136, 170)){
+            if (pnt_in_rect(x, y, 151, 205, 299, 381)){
                 character_flag=1;
                 game_change_scene(SCENE_MENU);
             }
             // telescope
-            else if (pnt_in_rect(x, y, 500, 220, 135, 130)){
+            else if (pnt_in_rect(x, y, 500, 220, 635, 350)){
                 character_flag=0;
                 game_change_scene(SCENE_MENU);
             }
@@ -738,8 +738,11 @@ ALLEGRO_BITMAP *load_bitmap_resized(const char *filename, int w, int h) {
 }
 
 
-bool pnt_in_rect(int px, int py, int x, int y, int w, int h) {
-    return (px>=x && px<=(x+w) && py>=y && py<=(py+h)) ? true:false;
+//bool pnt_in_rect(int px, int py, int x, int y, int w, int h) {
+//    return (px>=x && px<=(x+w) && py>=y && py<=(py+h)) ? true:false;
+//}
+bool pnt_in_rect(int px, int py, int x, int y, int x2, int y2) {
+    return (px>=x && px<=x2 && py>=y && py<=y2) ? true:false;
 }
 
 
