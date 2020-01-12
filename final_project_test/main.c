@@ -106,6 +106,7 @@ void draw_movable_object(MovableObject obj);
 #define MAX_ENEMY 6
 #define MAX_BULLET 20
 #define MAX_TEXT 100
+#define MAX_UFO 5
 
 MovableObject plane;
 int human_blood=5;
@@ -113,7 +114,7 @@ int moon_blood=10;
 int score=0;
 MovableObject enemies[MAX_ENEMY];
 MovableObject bullets[MAX_BULLET];
-MovableObject iss;
+MovableObject iss[MAX_ENEMY];
 
 const float MAX_COOLDOWN = 0.2f;
 double last_shoot_timestamp;
@@ -256,7 +257,9 @@ void game_init(void) {
 		game_abort("failed to load font: pirulen.ttf with size 24");
 
 	/* Menu Scene resources*/
-	main_img_background = load_bitmap_resized("main-bg.jpg", SCREEN_W, SCREEN_H);
+	main_img_background = al_load_bitmap("coverjpg.jpg");
+    if (!main_img_background)
+        game_abort("failed to load image: coverjpg.jpg");
     
 	main_bgm = al_load_sample("S31-Night Prowler.ogg");
 	if (!main_bgm)
@@ -472,8 +475,8 @@ void game_update(void) {
 void game_draw(void) {
 	if (active_scene == SCENE_MENU) {
 		al_draw_bitmap(main_img_background, 0, 0, 0);
-		al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER, "Space Shooter");
-		al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, "Press enter key to start");
+//        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER, "Space Shooter");
+//        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, "Press enter key to start");
 		// [HACKATHON 3-5]done
 		// TODO: Draw settings images.
 		// The settings icon should be located at (x, y, w, h) =
@@ -629,11 +632,16 @@ void game_change_scene(int next_scene) {
             bullets[i].hit_cnt=0;
         }
         /*iss*/
-        iss.img = start_img_iss;
-        iss.w = al_get_bitmap_width(iss.img);
-        iss.h = al_get_bitmap_height(iss.img);
-        iss.hit_cnt=0;
-        iss.hidden=true;
+        for (i=0;i<MAX_ENEMY;i++){
+        iss[i].img = start_img_iss;
+        iss[i].w = al_get_bitmap_width(start_img_iss);
+        iss[i].h = al_get_bitmap_height(start_img_iss);
+        iss[i].hit_cnt=0;
+        iss[i].hidden=true;
+        iss[i].x = iss[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - iss[i].w);
+        iss[i].y = rand()%81;
+        iss[i].vy=(rand()%10000)*0.0002;
+        }
         
 		if (!al_play_sample(start_bgm, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &start_bgm_id))
 			game_abort("failed to play audio (bgm)");

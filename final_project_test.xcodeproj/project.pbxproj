@@ -15,6 +15,7 @@
 		B205FAC523CA184C00312C92 /* moondying.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B205FAC423CA184C00312C92 /* moondying.jpg */; };
 		B205FACF23CA2DFD00312C92 /* lunar_lander.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FACE23CA2DFD00312C92 /* lunar_lander.png */; };
 		B205FAD123CAF29D00312C92 /* iss.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAD023CAF29C00312C92 /* iss.png */; };
+		B205FAD523CB16AE00312C92 /* coverjpg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B205FAD423CB16AD00312C92 /* coverjpg.jpg */; };
 		B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22561A423A4C77B0035BB7F /* Assets.xcassets */; };
 		B22561A823A4C77B0035BB7F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22561A623A4C77B0035BB7F /* MainMenu.xib */; };
 		B22561DA23A4C8720035BB7F /* liballegro_dialog.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B22561B323A4C8710035BB7F /* liballegro_dialog.5.2.dylib */; };
@@ -78,6 +79,7 @@
 		B205FAC423CA184C00312C92 /* moondying.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = moondying.jpg; path = final_project_test/moondying.jpg; sourceTree = "<group>"; };
 		B205FACE23CA2DFD00312C92 /* lunar_lander.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lunar_lander.png; path = final_project_test/lunar_lander.png; sourceTree = "<group>"; };
 		B205FAD023CAF29C00312C92 /* iss.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iss.png; path = final_project_test/iss.png; sourceTree = "<group>"; };
+		B205FAD423CB16AD00312C92 /* coverjpg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = coverjpg.jpg; path = final_project_test/coverjpg.jpg; sourceTree = "<group>"; };
 		B225619E23A4C77A0035BB7F /* final_project_test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = final_project_test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22561A423A4C77B0035BB7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B22561A723A4C77B0035BB7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 		B225619523A4C77A0035BB7F = {
 			isa = PBXGroup;
 			children = (
+				B205FAD423CB16AD00312C92 /* coverjpg.jpg */,
 				B205FACE23CA2DFD00312C92 /* lunar_lander.png */,
 				B205FAC023CA130000312C92 /* moon_dead.jpg */,
 				B205FAB823C9E4DC00312C92 /* asteroid_50.png */,
@@ -338,6 +341,7 @@
 				B205FAB323C9DBBC00312C92 /* moonbackground_0.jpg in Resources */,
 				B205FAD123CAF29D00312C92 /* iss.png in Resources */,
 				B205FAB923C9E4DC00312C92 /* asteroid_50.png in Resources */,
+				B205FAD523CB16AE00312C92 /* coverjpg.jpg in Resources */,
 				B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */,
 				B225621823A5D11B0035BB7F /* S31-Night Prowler.ogg in Resources */,
 				B205FACF23CA2DFD00312C92 /* lunar_lander.png in Resources */,
