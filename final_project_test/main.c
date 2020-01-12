@@ -107,19 +107,21 @@ typedef struct {
 void draw_movable_object(MovableObject obj);
 
 #define MAX_ENEMY 6
-#define MAX_BULLET 20
+#define MAX_BULLET 30
 #define MAX_TEXT 100
 #define MAX_UFO 5
+#define MAX_ISS 1
 
 MovableObject plane;
 int human_blood=5;
 int moon_blood=10;
 int score=0;
+int iss_cnt=0;
 MovableObject enemies[MAX_ENEMY];
 MovableObject bullets[MAX_BULLET];
 MovableObject iss[MAX_ENEMY];
 
-const float MAX_COOLDOWN = 0.2f;
+const float MAX_COOLDOWN = 0.15f;
 double last_shoot_timestamp;
 
 /* Declare function prototypes. */
@@ -417,11 +419,11 @@ void game_update(void) {
         //Update enemy coordinates
         for (i=0;i<MAX_ENEMY;i++) {
             if (enemies[i].hidden){
-                if(rand()>10000){
+                if(rand()>20000){
                 enemies[i].hidden=false;
                 enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
-                enemies[i].y = 80;
-                enemies[i].vy=(rand()%10000)*0.0002;}
+                enemies[i].y = rand()%41;
+                enemies[i].vy=(rand()%10000)*0.00015;}
             }
             enemies[i].y += enemies[i].vy;
             //enemy collide plane
@@ -448,6 +450,36 @@ void game_update(void) {
                     game_log("moon is dead");
                     game_change_scene(M_DEAD_GAMEOVER); //temp
                 }
+            }
+        }
+        //iss
+        for (i = 0;i<MAX_ISS;i++){
+            if (score&&score%5==0&&iss[i].hidden){
+                if(rand()%100>98){
+                    iss[i].hidden = false;
+                    iss[i].x = iss[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - iss[i].w);
+                    iss[i].y = rand()%41;
+                    iss[i].vx=0.5;
+                    iss[i].vy=(rand()%10000)*0.0001;
+                }
+            }
+            else if (iss[i].hidden==false){
+                if(iss[i].x+iss[i].w/2 >= SCREEN_W ||iss[i].x-iss[i].w/2 <=0){
+                    iss[i].vx=-1*iss[i].vx;
+                }
+                iss[i].y+=iss[i].vy;
+                iss[i].x+=iss[i].vx;
+                
+                //iss collide plane
+                if(plane.x>iss[i].x-iss[i].w/2&&plane.x<iss[i].x+iss[i].w/2&&plane.y>iss[i].y-iss[i].h/2&&plane.y<iss[i].y+iss[i].h/2){
+                    iss[i].hidden=true;
+                    iss_cnt++;
+                    break;
+                }
+            }
+            if (iss[i].x > SCREEN_W || iss[i].y>SCREEN_H){
+                iss[i].hidden = true;
+                
             }
         }
         double now = al_get_time();//用get time get time
@@ -496,11 +528,13 @@ void game_draw(void) {
 		int i;
 		al_draw_bitmap(start_img_background, 0, 0, 0);
 		
-        for (i=0;i<MAX_BULLET;i++)
+        for (i = 0; i < MAX_BULLET; i++)
             draw_movable_object(bullets[i]);
 		draw_movable_object(plane);
 		for (i = 0; i < MAX_ENEMY; i++)
 			draw_movable_object(enemies[i]);
+        for (i = 0; i < MAX_ISS; i++)
+            draw_movable_object(iss[i]);
         //human blood bar
         char humanblood[MAX_TEXT]="Human Blood:";
         char buff[MAX_TEXT]="";
@@ -519,13 +553,13 @@ void game_draw(void) {
         sprintf(buff3,"%d", moon_blood);
         strcat(moon_text, buff3);
         al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 100, 0, moon_text);
-        //time
-        double now_time = al_get_time();
-        char time_text[MAX_TEXT]="Time:";
+        //iss
+//        double now_time = al_get_time();
+        char iss_text[MAX_TEXT]="ISS:";
         char buff4[MAX_TEXT]="";
-        sprintf(buff4,"%.1lf", now_time);
-        strcat(time_text, buff4);
-        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, time_text);
+        sprintf(buff4,"%d", iss_cnt);
+        strcat(iss_text, buff4);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, iss_text);
 	}
     
 	
@@ -614,6 +648,7 @@ void game_change_scene(int next_scene) {
         human_blood=5;
         //init score
         score=0;
+        iss_cnt=0;
         
         /*plane*/
 //        plane.img = start_img_plane;
@@ -651,7 +686,7 @@ void game_change_scene(int next_scene) {
             bullets[i].hit_cnt=0;
         }
         /*iss*/
-        for (i=0;i<MAX_ENEMY;i++){
+        for (i=0;i<MAX_ISS;i++){
         iss[i].img = start_img_iss;
         iss[i].w = al_get_bitmap_width(start_img_iss);
         iss[i].h = al_get_bitmap_height(start_img_iss);
@@ -659,7 +694,7 @@ void game_change_scene(int next_scene) {
         iss[i].hidden=true;
         iss[i].x = iss[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - iss[i].w);
         iss[i].y = rand()%41;
-        iss[i].vy=(rand()%10000)*0.0002;
+        iss[i].vy=(rand()%10000)*0.0001;
         }
         
 		if (!al_play_sample(start_bgm, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &start_bgm_id))
