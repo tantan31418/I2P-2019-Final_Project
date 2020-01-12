@@ -36,7 +36,8 @@ enum {
     SCENE_SETTINGS = 3,
     H_DEAD_GAMEOVER = 4,
     M_DEAD_GAMEOVER = 5,
-    SCENE_WIN = 6
+    SCENE_WIN = 6,
+    SCENE_HELP = 7
 };
 
 /* Input states */
@@ -93,6 +94,8 @@ ALLEGRO_BITMAP* moon_gameover_background;
 ALLEGRO_BITMAP* settings_choose_char;
 ALLEGRO_BITMAP* ll_line;
 ALLEGRO_BITMAP* tl_line;
+ALLEGRO_BITMAP* m45_line;
+ALLEGRO_BITMAP* help_img;
 
 /* Win Scene*/
 ALLEGRO_BITMAP* win_astronaut;
@@ -315,6 +318,8 @@ void game_init(void) {
     settings_choose_char = al_load_bitmap("chosechar.png");
     ll_line = al_load_bitmap("ll_line.png");
     tl_line = al_load_bitmap("tl_line.png");
+    m45_line = al_load_bitmap("m45-line.png");
+    help_img = al_load_bitmap("help.png");
     /* Win Scene*/
     win_astronaut = al_load_bitmap("winastronaut.png");
     
@@ -629,6 +634,10 @@ void game_draw(void) {
         else if (pnt_in_rect(mouse_x, mouse_y, 500, 220, 635, 350)){
             al_draw_bitmap(tl_line, 494, 205, 0);
         }
+        //help
+        else if (pnt_in_rect(mouse_x, mouse_y, 673, 26, 756, 165)){
+            al_draw_bitmap(m45_line, 664, 0, 0);
+        }
     }
     else if (active_scene == H_DEAD_GAMEOVER){
         al_draw_bitmap(human_gameover_background, 0, 0, 0);
@@ -642,6 +651,9 @@ void game_draw(void) {
     }
     else if (active_scene == SCENE_WIN){
         al_draw_bitmap(win_astronaut, 0, 0, 0);
+    }
+    else if (active_scene == SCENE_HELP){
+        al_draw_bitmap(help_img, 0, 0, 0);
     }
     
     al_flip_display();
@@ -683,6 +695,8 @@ void game_destroy(void) {
     al_destroy_bitmap(settings_choose_char);
     al_destroy_bitmap(ll_line);
     al_destroy_bitmap(tl_line);
+    al_destroy_bitmap(m45_line);
+    al_destroy_bitmap(help_img);
     
     /*win scene*/
     al_destroy_bitmap(win_astronaut);
@@ -793,6 +807,10 @@ void on_key_down(int keycode) {
         if (keycode == ALLEGRO_KEY_ENTER)
             game_change_scene(SCENE_MENU);
     }
+    else if (active_scene == SCENE_HELP) {
+        if (keycode == ALLEGRO_KEY_ENTER)
+            game_change_scene(SCENE_MENU);
+    }
 }
 
 void on_mouse_down(int btn, int x, int y) {
@@ -817,6 +835,10 @@ void on_mouse_down(int btn, int x, int y) {
             else if (pnt_in_rect(x, y, 500, 220, 635, 350)){
                 character_flag=0;
                 game_change_scene(SCENE_MENU);
+            }
+            //help
+            else if (pnt_in_rect(x, y, 673, 26, 756, 165)){
+                game_change_scene(SCENE_HELP);
             }
         }
     }
