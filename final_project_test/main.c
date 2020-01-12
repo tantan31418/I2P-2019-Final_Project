@@ -33,9 +33,6 @@ const int RESERVE_SAMPLES = 4;
 enum {
 	SCENE_MENU = 1,
 	SCENE_START = 2,
-	// [HACKATHON 3-7] done
-	// TODO: Declare a new scene id.
-    //只是uncomment,可能是把第三個叫做settings
     SCENE_SETTINGS = 3,
     H_DEAD_GAMEOVER = 4,
     M_DEAD_GAMEOVER = 5
@@ -53,7 +50,7 @@ bool *mouse_state;
 // Mouse position.
 int mouse_x, mouse_y;
 // TODO: More variables to store input states such as joysticks, ...
-
+bool character_flag=1;
 /* Variables for allegro basic routines. */
 
 ALLEGRO_DISPLAY* game_display;
@@ -77,6 +74,7 @@ ALLEGRO_SAMPLE_ID main_bgm_id;
 /* Start Scene resources*/
 ALLEGRO_BITMAP* start_img_background;
 ALLEGRO_BITMAP* start_img_plane;
+ALLEGRO_BITMAP* start_img_plane2;
 ALLEGRO_BITMAP* start_img_enemy;
 ALLEGRO_SAMPLE* start_bgm;
 ALLEGRO_SAMPLE_ID start_bgm_id;
@@ -86,6 +84,11 @@ ALLEGRO_BITMAP* start_img_iss;
 /* Game over Scene resources*/
 ALLEGRO_BITMAP* human_gameover_background;
 ALLEGRO_BITMAP* moon_gameover_background;
+
+/*Settings Scene resources*/
+ALLEGRO_BITMAP* settings_choose_char;
+ALLEGRO_BITMAP* ll_line;
+ALLEGRO_BITMAP* tl_line;
 
 typedef struct {
 	// The center coordinate of the image.
@@ -143,11 +146,7 @@ void game_destroy(void);
 void game_change_scene(int next_scene);
 // Load resized bitmap and check if failed.
 ALLEGRO_BITMAP *load_bitmap_resized(const char *filename, int w, int h);
-// [HACKATHON 3-2]done
-// TODO: Declare a function.
-// Determines whether the point (px, py) is in rect (x, y, w, h).
-// Uncomment the code below.
-//只有uncomment吧，宣告function
+
 bool pnt_in_rect(int px, int py, int x, int y, int w, int h);
 
 /* Event callbacks. */
@@ -277,7 +276,10 @@ void game_init(void) {
 
 	start_img_plane = al_load_bitmap("lunar_lander.png");
 	if (!start_img_plane)
-		game_abort("failed to load image: plane.png");
+		game_abort("failed to load image: lunar_lander.png");
+    start_img_plane2 = al_load_bitmap("telescope.png");
+    if (!start_img_plane2)
+        game_abort("failed to load image: telescope.png");
 
 	start_img_enemy = al_load_bitmap("asteroid_50.png");
 	if (!start_img_enemy)
@@ -296,7 +298,10 @@ void game_init(void) {
     /* Game Over Scene resources*/
     human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
     moon_gameover_background = al_load_bitmap("moondying.jpg");
-
+    /* Settings Scene resources*/
+    settings_choose_char = al_load_bitmap("chosechar.png");
+    ll_line = al_load_bitmap("ll_line.png");
+    tl_line = al_load_bitmap("tl_line.png");
 	// Change to first scene.
 	game_change_scene(SCENE_MENU);
 }
@@ -425,7 +430,7 @@ void game_update(void) {
                 game_log("plane hit count=%d",plane.hit_cnt);
                 plane.hidden=true;
                 plane.x = 400;
-                plane.y = 500;
+                plane.y = 600;
                 plane.hidden=false;
                 //bug:if stay at home will still repeat count
                 human_blood--;
@@ -477,14 +482,7 @@ void game_draw(void) {
 		al_draw_bitmap(main_img_background, 0, 0, 0);
 //        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER, "Space Shooter");
 //        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, "Press enter key to start");
-		// [HACKATHON 3-5]done
-		// TODO: Draw settings images.
-		// The settings icon should be located at (x, y, w, h) =
-		// (SCREEN_W - 48, 10, 38, 38).
-		// Change its image according to your mouse position.
-		// Uncomment and fill in the code below.
-        //照著填進來
-        //如果那個點在長方形裡面（使用者滑鼠有點到settings按鈕），就把icon改成img_settings2，不然就照原本的
+		
         if (pnt_in_rect(mouse_x, mouse_y, SCREEN_W-48, 10, 38, 38))
             al_draw_bitmap(img_settings2, SCREEN_W-48, 10, 0);
         else
@@ -493,10 +491,7 @@ void game_draw(void) {
     else if (active_scene == SCENE_START) {
 		int i;
 		al_draw_bitmap(start_img_background, 0, 0, 0);
-		// [HACKATHON 2-9]done
-		// TODO: Draw all bullets in your bullet array.
-		// Uncomment and fill in the code below.
-        //參照下面ENEMY的作法，同理類推
+		
         for (i=0;i<MAX_BULLET;i++)
             draw_movable_object(bullets[i]);
 		draw_movable_object(plane);
@@ -529,12 +524,18 @@ void game_draw(void) {
         al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, time_text);
 	}
     
-	// [HACKATHON 3-9]done
-	// TODO: If active_scene is SCENE_SETTINGS.
-	// Draw anything you want, or simply clear the display.
-    //佈置切換到settings頁面的樣子，照著打就是變全黑
+	
     else if (active_scene == SCENE_SETTINGS) {
-        al_clear_to_color(al_map_rgb(0, 0, 0));
+        al_draw_bitmap(settings_choose_char, 0, 0, 0);
+        
+        // lunar lander white line 144 197
+        if (pnt_in_rect(mouse_x, mouse_y, 151, 205, 136, 170)){
+            al_draw_bitmap(ll_line, 144, 197, 0);
+        }
+        // telescope 494 205
+        else if (pnt_in_rect(mouse_x, mouse_y, 500, 220, 135, 130)){
+            al_draw_bitmap(tl_line, 494, 205, 0);
+        }
     }
     else if (active_scene == H_DEAD_GAMEOVER){
         al_draw_bitmap(human_gameover_background, 0, 0, 0);
@@ -566,6 +567,7 @@ void game_destroy(void) {
 	/* Start Scene resources*/
 	al_destroy_bitmap(start_img_background);
 	al_destroy_bitmap(start_img_plane);
+    al_destroy_bitmap(start_img_plane2);
 	al_destroy_bitmap(start_img_enemy);
 	al_destroy_sample(start_bgm);
     al_destroy_bitmap(img_bullet);
@@ -578,6 +580,11 @@ void game_destroy(void) {
     /* Game over Scene resources*/
     al_destroy_bitmap(human_gameover_background);
     al_destroy_bitmap(moon_gameover_background);
+    
+    /* Settings Scene resources*/
+    al_destroy_bitmap(settings_choose_char);
+    al_destroy_bitmap(ll_line);
+    al_destroy_bitmap(tl_line);
 }
 
 void game_change_scene(int next_scene) {
@@ -605,9 +612,17 @@ void game_change_scene(int next_scene) {
         score=0;
         
         /*plane*/
-        plane.img = start_img_plane;
+//        plane.img = start_img_plane;
+        
+         if (character_flag){
+         plane.img = start_img_plane;
+         }
+         else{
+         plane.img = start_img_plane2;
+         }
+        
 		plane.x = 400;
-		plane.y = 500;
+		plane.y = 600;
 		plane.w = al_get_bitmap_width(plane.img);
         plane.h = al_get_bitmap_height(plane.img);
         plane.hit_cnt=0;
@@ -617,8 +632,8 @@ void game_change_scene(int next_scene) {
 			enemies[i].w = al_get_bitmap_width(start_img_enemy);
 			enemies[i].h = al_get_bitmap_height(start_img_enemy);
 			enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
-			enemies[i].y = rand()%81;
-            enemies[i].vy=(rand()%10000)*0.0002;
+			enemies[i].y = rand()%41;
+            enemies[i].vy=(rand()%10000)*0.00015;
             enemies[i].hit_cnt=0;
 		}
 		/*bullet*/
@@ -639,7 +654,7 @@ void game_change_scene(int next_scene) {
         iss[i].hit_cnt=0;
         iss[i].hidden=true;
         iss[i].x = iss[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - iss[i].w);
-        iss[i].y = rand()%81;
+        iss[i].y = rand()%41;
         iss[i].vy=(rand()%10000)*0.0002;
         }
         
@@ -674,6 +689,20 @@ void on_mouse_down(int btn, int x, int y) {
                 game_change_scene(SCENE_SETTINGS);
         }
     }
+    else if (active_scene == SCENE_SETTINGS){
+        if (btn == 1){
+            // lunar lander
+            if (pnt_in_rect(x, y, 151, 205, 136, 170)){
+                character_flag=1;
+                game_change_scene(SCENE_MENU);
+            }
+            // telescope
+            else if (pnt_in_rect(x, y, 500, 220, 135, 130)){
+                character_flag=0;
+                game_change_scene(SCENE_MENU);
+            }
+        }
+    }
 }
 
 void draw_movable_object(MovableObject obj) {
@@ -704,10 +733,7 @@ ALLEGRO_BITMAP *load_bitmap_resized(const char *filename, int w, int h) {
 	return resized_bmp;
 }
 
-// [HACKATHON 3-3]done
-// TODO: Define bool pnt_in_rect(int px, int py, int x, int y, int w, int h)
-// Uncomment and fill in the code below.
-// 怎麼判斷一個點是不是在一個長方形裡面？
+
 bool pnt_in_rect(int px, int py, int x, int y, int w, int h) {
     return (px>=x &&px<=x+w &&py>=y &&py<=py+h)? true:false;
 }
