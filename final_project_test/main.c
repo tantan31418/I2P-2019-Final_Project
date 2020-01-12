@@ -483,10 +483,14 @@ void game_draw(void) {
 //        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, 30, ALLEGRO_ALIGN_CENTER, "Space Shooter");
 //        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, "Press enter key to start");
 		
-        if (pnt_in_rect(mouse_x, mouse_y, SCREEN_W-48, 10, 38, 38))
+        if (pnt_in_rect(mouse_x, mouse_y, SCREEN_W-48, 10, 38, 38)){
+//            game_log("pnt in rect draw imgsetting2");
             al_draw_bitmap(img_settings2, SCREEN_W-48, 10, 0);
-        else
+        }
+        else{
             al_draw_bitmap(img_settings, SCREEN_W-48, 10, 0);
+//            game_log("draw imgsetting");
+        }
 	}
     else if (active_scene == SCENE_START) {
 		int i;
@@ -670,11 +674,11 @@ void on_key_down(int keycode) {
 	}
     else if (active_scene == H_DEAD_GAMEOVER) {
         if (keycode == ALLEGRO_KEY_ENTER)
-            game_change_scene(SCENE_START);
+            game_change_scene(SCENE_MENU);
     }
     else if (active_scene == M_DEAD_GAMEOVER) {
         if (keycode == ALLEGRO_KEY_ENTER)
-            game_change_scene(SCENE_START);
+            game_change_scene(SCENE_MENU);
     }
 }
 
@@ -735,7 +739,7 @@ ALLEGRO_BITMAP *load_bitmap_resized(const char *filename, int w, int h) {
 
 
 bool pnt_in_rect(int px, int py, int x, int y, int w, int h) {
-    return (px>=x &&px<=x+w &&py>=y &&py<=py+h)? true:false;
+    return (px>=x && px<=(x+w) && py>=y && py<=(py+h)) ? true:false;
 }
 
 
