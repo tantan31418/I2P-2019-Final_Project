@@ -69,12 +69,6 @@ ALLEGRO_FONT* font_pirulen_24;
 
 /* Menu Scene resources*/
 ALLEGRO_BITMAP* main_img_background;
-ALLEGRO_BITMAP* human_gameover_background;
-ALLEGRO_BITMAP* moon_gameover_background;
-// [HACKATHON 3-1] done
-// TODO: Declare 2 variables for storing settings images.
-// Uncomment and fill in the code below.
-//只有uncomment, 就像之前的task一樣，建立變數儲存圖片指標
 ALLEGRO_BITMAP* img_settings;
 ALLEGRO_BITMAP* img_settings2;
 ALLEGRO_SAMPLE* main_bgm;
@@ -86,11 +80,12 @@ ALLEGRO_BITMAP* start_img_plane;
 ALLEGRO_BITMAP* start_img_enemy;
 ALLEGRO_SAMPLE* start_bgm;
 ALLEGRO_SAMPLE_ID start_bgm_id;
-// [HACKATHON 2-1] done
-// TODO: Declare a variable to store your bullet's image.
-// Uncomment and fill in the code below.
-//因為img_bullet is image,so use ALLEGRO_BITMAP
 ALLEGRO_BITMAP* img_bullet;
+ALLEGRO_BITMAP* start_img_iss;
+
+/* Game over Scene resources*/
+ALLEGRO_BITMAP* human_gameover_background;
+ALLEGRO_BITMAP* moon_gameover_background;
 
 typedef struct {
 	// The center coordinate of the image.
@@ -107,30 +102,19 @@ typedef struct {
     int hit_cnt;
 } MovableObject;
 void draw_movable_object(MovableObject obj);
+
 #define MAX_ENEMY 6
-// [HACKATHON 2-2] done
-// TODO: Declare the max bullet count that will show on screen.
-// You can try max 4 bullets here and see if you needed more.
-// Uncomment and fill in the code below.
-//反正就先用4個子彈看看囉
-#define MAX_BULLET 6
+#define MAX_BULLET 20
 #define MAX_TEXT 100
+
 MovableObject plane;
 int human_blood=5;
 int moon_blood=10;
 int score=0;
 MovableObject enemies[MAX_ENEMY];
-// [HACKATHON 2-3]done
-// TODO: Declare an array to store bullets with size of max bullet count.
-// Uncomment and fill in the code below.
-//從上面那兩行發現子彈可能也會動所以是movableobject,也可以從後面的code看到有draw movable objects的function，推測bullets array應該是movable object
 MovableObject bullets[MAX_BULLET];
-// [HACKATHON 2-4]done
-// TODO: Set up bullet shooting cool-down variables.
-// 1) Declare your shooting cool-down time as constant. (0.2f will be nice)
-// 2) Declare your last shoot timestamp.
-// Uncomment and fill in the code below.
-//就試試看0.2f
+MovableObject iss;
+
 const float MAX_COOLDOWN = 0.2f;
 double last_shoot_timestamp;
 
@@ -273,17 +257,11 @@ void game_init(void) {
 
 	/* Menu Scene resources*/
 	main_img_background = load_bitmap_resized("main-bg.jpg", SCREEN_W, SCREEN_H);
-    human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
-    moon_gameover_background = al_load_bitmap("moondying.jpg");
+    
 	main_bgm = al_load_sample("S31-Night Prowler.ogg");
 	if (!main_bgm)
 		game_abort("failed to load audio: S31-Night Prowler.ogg");
 
-	// [HACKATHON 3-4]done
-	// TODO: Load settings images.
-	// Don't forget to check their return values.
-	// Uncomment and fill in the code below.
-    //在task裡面應該處理過類似的東西了，記得把圖片放進同一個資料夾
 	img_settings = al_load_bitmap("settings.png");
 	if (!img_settings)
 		game_abort("failed to load image: settings.png");
@@ -294,7 +272,7 @@ void game_init(void) {
 	/* Start Scene resources*/
 	start_img_background = load_bitmap_resized("moonbackground_0.jpg", SCREEN_W, SCREEN_H);
 
-	start_img_plane = al_load_bitmap("icons8-lunar-lander-64.png");
+	start_img_plane = al_load_bitmap("lunar_lander.png");
 	if (!start_img_plane)
 		game_abort("failed to load image: plane.png");
 
@@ -306,17 +284,15 @@ void game_init(void) {
 	if (!start_bgm)
 		game_abort("failed to load audio: mythica.ogg");
 
-	// [HACKATHON 2-5]done
-	// TODO: Initialize bullets.
-	// 1) Search for a bullet image online and put it in your project.
-	//    You can use the image we provided.
-	// 2) Load it in by 'al_load_bitmap' or 'load_bitmap_resized'.
-	// 3) If you use 'al_load_bitmap', don't forget to check its return value.
-	// Uncomment and fill in the code below.
-    //跟task一樣
     img_bullet = al_load_bitmap("image12.png");
     if (!img_bullet)
         game_abort("failed to load image: image12.png");
+    
+    start_img_iss = al_load_bitmap("iss.png");
+    
+    /* Game Over Scene resources*/
+    human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
+    moon_gameover_background = al_load_bitmap("moondying.jpg");
 
 	// Change to first scene.
 	game_change_scene(SCENE_MENU);
@@ -395,11 +371,7 @@ void game_update(void) {
 		// 0.71 is (1/sqrt(2)).
 		plane.y += plane.vy * 4 * (plane.vx ? 0.71f : 1);
 		plane.x += plane.vx * 4 * (plane.vy ? 0.71f : 1);
-		// [HACKATHON 1-1]kind of done
-		// TODO: Limit the plane's collision box inside the frame.
-		//       (x, y axes can be separated.)
-		// Uncomment and fill in the code below.
-        //x,y是中心點，w,h是長寬，如果中心點的x加上一半的w會跑出左界或右界，要把他調回來，把中心點設定在離邊界一半w的地方，同理可知道y
+		
         if (plane.x-plane.w/2 < 0)
             plane.x = plane.w/2;
         else if (plane.x+plane.w/2 > SCREEN_W)
@@ -408,13 +380,7 @@ void game_update(void) {
             plane.y = plane.h/2;
         else if (plane.y+plane.h/2 > SCREEN_H)
             plane.y = SCREEN_H-plane.h/2;
-        // [HACKATHON 2-7] done not sure about #401
-		// TODO: Update bullet coordinates.
-		// 1) For each bullets, if it's not hidden, update x, y
-        // according to vx, vy. #not sure
-		// 2) If the bullet is out of the screen, hide it.
-		// Uncomment and fill in the code below.
-        //大概有一些keyboard event會輸入到board.vx 跟board.vy，所以用迴圈讀取bullet array，判斷如果子彈現在沒有在螢幕上（被回收了），就跳出迴圈，然後根據那個i(那個子彈)，把他加上他動的距離。
+        
         int i;
         for (i=0;i<MAX_BULLET;i++) {
             if (bullets[i].hidden)
@@ -449,7 +415,6 @@ void game_update(void) {
                 enemies[i].y = 80;
                 enemies[i].vy=(rand()%10000)*0.0002;}
             }
-//            enemies[i].vy=enemies[i].vy*1.00001;
             enemies[i].y += enemies[i].vy;
             //enemy collide plane
             if(plane.x>enemies[i].x-enemies[i].w/2&&plane.x<enemies[i].x+enemies[i].w/2&&plane.y>enemies[i].y-enemies[i].h/2&&plane.y<enemies[i].y+enemies[i].h/2){
@@ -477,20 +442,6 @@ void game_update(void) {
                 }
             }
         }
-
-		// [HACKATHON 2-8]done
-		// TODO: Shoot if key is down and cool-down is over.
-		// 1) Get the time now using 'al_get_time'.
-		// 2) If Space key is down in 'key_state' and the time
-		//    between now and last shoot is not less that cool
-		//    down time.
-		// 3) Loop through the bullet array and find one that is hidden.
-		//    (This part can be optimized.)
-		// 4) The bullet will be found if your array is large enough.
-		// 5) Set the last shoot time to now.
-		// 6) Set hidden to false (recycle the bullet) and set its x, y to the
-		//    front part of your plane.
-		// Uncomment and fill in the code below.
         double now = al_get_time();//用get time get time
         if (key_state[ALLEGRO_KEY_SPACE] && now - last_shoot_timestamp >= MAX_COOLDOWN) {
             for (i = 0; i<MAX_BULLET;i++) {
@@ -504,6 +455,7 @@ void game_update(void) {
                 bullets[i].y = plane.y-(plane.h)/2;//要從中心點減一半高度
             }
         }
+        
 	}
     else if (active_scene == SCENE_SETTINGS){
         
@@ -565,6 +517,13 @@ void game_draw(void) {
         sprintf(buff3,"%d", moon_blood);
         strcat(moon_text, buff3);
         al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 100, 0, moon_text);
+        //time
+        double now_time = al_get_time();
+        char time_text[MAX_TEXT]="Time:";
+        char buff4[MAX_TEXT]="";
+        sprintf(buff4,"%.1lf", now_time);
+        strcat(time_text, buff4);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, time_text);
 	}
     
 	// [HACKATHON 3-9]done
@@ -598,10 +557,6 @@ void game_destroy(void) {
 	/* Menu Scene resources*/
 	al_destroy_bitmap(main_img_background);
 	al_destroy_sample(main_bgm);
-	// [HACKATHON 3-6]done
-	// TODO: Destroy the 2 settings images.
-	// Uncomment and fill in the code below.
-    //如同task,destroy資源
     al_destroy_bitmap(img_settings);
     al_destroy_bitmap(img_settings2);
 
@@ -610,16 +565,16 @@ void game_destroy(void) {
 	al_destroy_bitmap(start_img_plane);
 	al_destroy_bitmap(start_img_enemy);
 	al_destroy_sample(start_bgm);
-	// [HACKATHON 2-10]done
-	// TODO: Destroy your bullet image.
-	// Uncomment and fill in the code below.
-    //跟上面一樣
     al_destroy_bitmap(img_bullet);
-
+    al_destroy_bitmap(start_img_iss);
 	al_destroy_timer(game_update_timer);
 	al_destroy_event_queue(game_event_queue);
 	al_destroy_display(game_display);
 	free(mouse_state);
+    
+    /* Game over Scene resources*/
+    al_destroy_bitmap(human_gameover_background);
+    al_destroy_bitmap(moon_gameover_background);
 }
 
 void game_change_scene(int next_scene) {
@@ -637,35 +592,33 @@ void game_change_scene(int next_scene) {
 	if (active_scene == SCENE_MENU) {
 		if (!al_play_sample(main_bgm, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &main_bgm_id))
 			game_abort("failed to play audio (bgm)");
-	} else if (active_scene == SCENE_START) {
+	}
+    else if (active_scene == SCENE_START) {
 		int i;
         //init blood
         moon_blood=10;
         human_blood=5;
+        //init score
+        score=0;
         
-		plane.img = start_img_plane;
+        /*plane*/
+        plane.img = start_img_plane;
 		plane.x = 400;
 		plane.y = 500;
 		plane.w = al_get_bitmap_width(plane.img);
         plane.h = al_get_bitmap_height(plane.img);
         plane.hit_cnt=0;
+        /*enemy*/
 		for (i = 0; i < MAX_ENEMY; i++) {
 			enemies[i].img = start_img_enemy;
 			enemies[i].w = al_get_bitmap_width(start_img_enemy);
 			enemies[i].h = al_get_bitmap_height(start_img_enemy);
 			enemies[i].x = enemies[i].w / 2 + (float)rand() / RAND_MAX * (SCREEN_W - enemies[i].w);
-			enemies[i].y = 80;
+			enemies[i].y = rand()%81;
             enemies[i].vy=(rand()%10000)*0.0002;
             enemies[i].hit_cnt=0;
-            game_log("init enemy%d hit count=%d",i,enemies[i].hit_cnt);
 		}
-		// [HACKATHON 2-6]done
-		// TODO: Initialize bullets.
-		// For each bullets in array, set their w and h to the size of
-		// the image, and set their img to bullet image, hidden to true,
-		// (vx, vy) to (0, -3).
-		// Uncomment and fill in the code below.
-        //照著指示做，自行理解
+		/*bullet*/
         for (i=0;i<MAX_BULLET;i++) {
             bullets[i].w = al_get_bitmap_width(img_bullet);
             bullets[i].h = al_get_bitmap_height(img_bullet);
@@ -675,6 +628,13 @@ void game_change_scene(int next_scene) {
             bullets[i].hidden = true;
             bullets[i].hit_cnt=0;
         }
+        /*iss*/
+        iss.img = start_img_iss;
+        iss.w = al_get_bitmap_width(iss.img);
+        iss.h = al_get_bitmap_height(iss.img);
+        iss.hit_cnt=0;
+        iss.hidden=true;
+        
 		if (!al_play_sample(start_bgm, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &start_bgm_id))
 			game_abort("failed to play audio (bgm)");
 	}
