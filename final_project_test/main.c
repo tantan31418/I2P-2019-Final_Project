@@ -80,9 +80,11 @@ ALLEGRO_BITMAP* start_img_background_red;
 ALLEGRO_BITMAP* start_img_plane;
 ALLEGRO_BITMAP* start_img_plane2;
 ALLEGRO_BITMAP* start_img_enemy;
+ALLEGRO_BITMAP* start_img_ufo_enemy;
 ALLEGRO_SAMPLE* start_bgm;
 ALLEGRO_SAMPLE_ID start_bgm_id;
 ALLEGRO_BITMAP* img_bullet;
+ALLEGRO_BITMAP* img_bullet2;
 ALLEGRO_BITMAP* start_img_iss;
 ALLEGRO_BITMAP* start_img_ufo;
 
@@ -131,6 +133,7 @@ MovableObject enemies[MAX_ENEMY];
 MovableObject bullets[MAX_BULLET];
 MovableObject iss[MAX_ENEMY];
 MovableObject ufo;
+MovableObject ufo_enemies[MAX_ENEMY];
 
 const float MAX_COOLDOWN = 0.15f;
 double last_shoot_timestamp;
@@ -298,14 +301,15 @@ void game_init(void) {
     start_img_enemy = al_load_bitmap("asteroid_50.png");
     if (!start_img_enemy)
         game_abort("failed to load image: asteroid_50.png");
-    
+    start_img_ufo_enemy = al_load_bitmap("ufoenemy.png");
     start_img_ufo = al_load_bitmap("ufo.png");
     
     start_bgm = al_load_sample("mythica.ogg");
     if (!start_bgm)
         game_abort("failed to load audio: mythica.ogg");
     
-    img_bullet = al_load_bitmap("image12.png");
+    img_bullet = al_load_bitmap("lhc_bull.png");
+    img_bullet2 = al_load_bitmap("telebull.png");
     if (!img_bullet)
         game_abort("failed to load image: image12.png");
     
@@ -434,16 +438,32 @@ void game_update(void) {
                     }
                 }
             }
+//            //bullet collide ufo enemy
+//            for (int j=0;j<MAX_ENEMY;j++){
+//                if(bullets[i].x>ufo_enemies[j].x-ufo_enemies[j].w/2&&bullets[i].x<ufo_enemies[j].x+ufo_enemies[j].w/2&&bullets[i].y>ufo_enemies[j].y-ufo_enemies[j].h/2&&bullets[i].y<ufo_enemies[j].y+ufo_enemies[j].h/2&&ufo_enemies[j].hidden==false){
+//
+//                    ufo_enemies[j].hit_cnt++;
+//                    bullets[i].hidden=true;
+//                    game_log("bullet hit ufo enemy at %d %d hit count%d",bullets[i].x,bullets[i].y,ufo_enemies[j].hit_cnt);
+//                    //hit count prints weird numbers but function correctly
+//                    if(ufo_enemies[j].hit_cnt==3){
+//                        ufo_enemies[j].hit_cnt=0;
+//                        ufo_enemies[j].hidden=true;
+//                        score++;
+//                        break;
+//                    }
+//                }
+//            }
             //bullet collide ufo
             if ((!ufo.hidden)&&bullets[i].x > ufo.x - ufo.w / 2 && bullets[i].x < ufo.x + ufo.w / 2 && bullets[i].y > ufo.y - ufo.h / 2 && bullets[i].y < ufo.y + ufo.h / 3){
                 
                 ufo.hit_cnt++;
                 game_log("ufo hit count = %d",ufo.hit_cnt);
                 bullets[i].hidden = true;
-                if (ufo.hit_cnt % 3 == 0)
-                {
-                    score++;
-                }
+//                if (ufo.hit_cnt % 3 == 0)
+//                {
+//                    score++;
+//                }
                 if (ufo.hit_cnt >= 10)
                 {
                     ufo.hidden = true;
@@ -495,6 +515,49 @@ void game_update(void) {
                 enemies[i].hidden = true;
             }
         }
+//        //ufo enemy
+//        for (i=0;i<MAX_ENEMY;i++) {
+//            if(ufo_active){
+//                if (ufo_enemies[i].hidden){
+//                    if(rand()>20000){
+//                        ufo_enemies[i].hidden=false;
+//                        ufo_enemies[i].x = ufo.x + (float)rand() / RAND_MAX * ufo.w;
+//                        ufo_enemies[i].y = ufo.y;
+//                        ufo_enemies[i].vy=(rand()%10000)*0.00015;}
+//                }
+//                else {
+//                    ufo_enemies[i].y += ufo_enemies[i].vy;
+//                    //enemy collide plane
+//                    if(plane.x>ufo_enemies[i].x-ufo_enemies[i].w/2&&plane.x<ufo_enemies[i].x+ufo_enemies[i].w/2&&plane.y>ufo_enemies[i].y-ufo_enemies[i].h/2&&plane.y<ufo_enemies[i].y+ufo_enemies[i].h/2){
+//                        plane.hit_cnt++;
+//                        game_log("plane hit count=%d",plane.hit_cnt);
+//                        plane.hidden=true;
+//                        plane.x = 400;
+//                        plane.y = 600;
+//                        plane.hidden=false;
+//                        //bug:if stay at home will still repeat count
+//                        human_blood-=2;
+//                        if(human_blood==0){
+//                            game_log("all human are dead");
+//                            game_change_scene(H_DEAD_GAMEOVER);
+//                        }
+//
+//                    }
+//                    //enemy hit sceen down
+//                    if (ufo_enemies[i].x > SCREEN_W || ufo_enemies[i].y>SCREEN_H){
+//                        ufo_enemies[i].hidden = true;
+//                        moon_blood-=2;
+//                        if(moon_blood<=0){
+//                            game_log("moon is dead");
+//                            game_change_scene(M_DEAD_GAMEOVER); //temp
+//                        }
+//                    }
+//                }
+//            }
+//            else{
+//                ufo_enemies[i].hidden = true;
+//            }
+//        }
         //iss
         for (i = 0;i<MAX_ISS;i++){
             if (score&&score%5==0&&iss[i].hidden){
@@ -595,6 +658,8 @@ void game_draw(void) {
             draw_movable_object(enemies[i]);
         for (i = 0; i < MAX_ISS; i++)
             draw_movable_object(iss[i]);
+//        for (i = 0; i < MAX_ENEMY; i++)
+//            draw_movable_object(ufo_enemies[i]);
         //human blood bar
         char humanblood[MAX_TEXT]="Human Blood:";
         char buff[MAX_TEXT]="";
@@ -678,9 +743,11 @@ void game_destroy(void) {
     al_destroy_bitmap(start_img_plane);
     al_destroy_bitmap(start_img_plane2);
     al_destroy_bitmap(start_img_enemy);
+    al_destroy_bitmap(start_img_ufo_enemy);
     al_destroy_bitmap(start_img_ufo);
     al_destroy_sample(start_bgm);
     al_destroy_bitmap(img_bullet);
+    al_destroy_bitmap(img_bullet2);
     al_destroy_bitmap(start_img_iss);
     al_destroy_timer(game_update_timer);
     al_destroy_event_queue(game_event_queue);
@@ -724,6 +791,7 @@ void game_change_scene(int next_scene) {
         moon_blood=10;
         human_blood=5;
         ufo.hit_cnt=0;
+        ufo_active=0;
         //init score
         score=0;
         iss_cnt=0;
@@ -753,11 +821,24 @@ void game_change_scene(int next_scene) {
             enemies[i].vy=(rand()%10000)*0.00015;
             enemies[i].hit_cnt=0;
         }
+//        /*ufo enemy*/
+//        for (i = 0; i < MAX_ENEMY; i++) {
+//            ufo_enemies[i].img = start_img_ufo_enemy;
+//            ufo_enemies[i].w = al_get_bitmap_width(start_img_enemy);
+//            ufo_enemies[i].h = al_get_bitmap_height(start_img_enemy);
+//            ufo_enemies[i].hit_cnt=0;
+//            ufo_enemies[i].hidden=true;
+//        }
         /*bullet*/
         for (i=0;i<MAX_BULLET;i++) {
             bullets[i].w = al_get_bitmap_width(img_bullet);
             bullets[i].h = al_get_bitmap_height(img_bullet);
-            bullets[i].img = img_bullet;
+            if (character_flag){
+                bullets[i].img = img_bullet;
+            }
+            else{
+                bullets[i].img = img_bullet2;
+            }
             bullets[i].vx = 0;
             bullets[i].vy = -3;
             bullets[i].hidden = true;
