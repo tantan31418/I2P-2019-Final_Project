@@ -28,6 +28,8 @@
 		B205FAEA23CBB7E400312C92 /* lhc_bull.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAE823CBB7E400312C92 /* lhc_bull.png */; };
 		B205FAEB23CBB7E400312C92 /* telebull.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAE923CBB7E400312C92 /* telebull.png */; };
 		B205FAED23CBBEDC00312C92 /* ufoenemy.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEC23CBBEDC00312C92 /* ufoenemy.png */; };
+		B205FAF023CBCA1700312C92 /* bigbull_ll.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEE23CBCA1700312C92 /* bigbull_ll.png */; };
+		B205FAF123CBCA1700312C92 /* bugbull_tl.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEF23CBCA1700312C92 /* bugbull_tl.png */; };
 		B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22561A423A4C77B0035BB7F /* Assets.xcassets */; };
 		B22561A823A4C77B0035BB7F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22561A623A4C77B0035BB7F /* MainMenu.xib */; };
 		B22561DA23A4C8720035BB7F /* liballegro_dialog.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B22561B323A4C8710035BB7F /* liballegro_dialog.5.2.dylib */; };
@@ -104,6 +106,8 @@
 		B205FAE823CBB7E400312C92 /* lhc_bull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lhc_bull.png; path = final_project_test/lhc_bull.png; sourceTree = "<group>"; };
 		B205FAE923CBB7E400312C92 /* telebull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = telebull.png; path = final_project_test/telebull.png; sourceTree = "<group>"; };
 		B205FAEC23CBBEDC00312C92 /* ufoenemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ufoenemy.png; path = final_project_test/ufoenemy.png; sourceTree = "<group>"; };
+		B205FAEE23CBCA1700312C92 /* bigbull_ll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bigbull_ll.png; path = final_project_test/bigbull_ll.png; sourceTree = "<group>"; };
+		B205FAEF23CBCA1700312C92 /* bugbull_tl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bugbull_tl.png; path = final_project_test/bugbull_tl.png; sourceTree = "<group>"; };
 		B225619E23A4C77A0035BB7F /* final_project_test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = final_project_test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22561A423A4C77B0035BB7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B22561A723A4C77B0035BB7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 		B225619523A4C77A0035BB7F = {
 			isa = PBXGroup;
 			children = (
+				B205FAEE23CBCA1700312C92 /* bigbull_ll.png */,
+				B205FAEF23CBCA1700312C92 /* bugbull_tl.png */,
 				B205FAE223CB91BF00312C92 /* winastronaut.png */,
 				B205FAD423CB16AD00312C92 /* coverjpg.jpg */,
 				B205FACE23CA2DFD00312C92 /* lunar_lander.png */,
@@ -395,6 +401,8 @@
 				B205FAC523CA184C00312C92 /* moondying.jpg in Resources */,
 				B225621723A5D11B0035BB7F /* settings.png in Resources */,
 				B225621123A5D11B0035BB7F /* image12.png in Resources */,
+				B205FAF123CBCA1700312C92 /* bugbull_tl.png in Resources */,
+				B205FAF023CBCA1700312C92 /* bigbull_ll.png in Resources */,
 				B205FAED23CBBEDC00312C92 /* ufoenemy.png in Resources */,
 				B225621623A5D11B0035BB7F /* smallfighter0006.png in Resources */,
 				B205FADD23CB2C2C00312C92 /* ll_line.png in Resources */,

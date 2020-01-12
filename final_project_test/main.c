@@ -87,6 +87,8 @@ ALLEGRO_BITMAP* img_bullet;
 ALLEGRO_BITMAP* img_bullet2;
 ALLEGRO_BITMAP* start_img_iss;
 ALLEGRO_BITMAP* start_img_ufo;
+ALLEGRO_BITMAP* sp_bullet_ll;
+ALLEGRO_BITMAP* sp_bullet_tl;
 
 /* Game over Scene resources*/
 ALLEGRO_BITMAP* human_gameover_background;
@@ -122,6 +124,7 @@ void draw_movable_object(MovableObject obj);
 #define MAX_BULLET 30
 #define MAX_TEXT 100
 #define MAX_ISS 1
+#define MAX_SP_BULLET 5
 
 MovableObject plane;
 int human_blood=5;
@@ -131,6 +134,7 @@ int iss_cnt=0;
 int ufo_blood=100;
 MovableObject enemies[MAX_ENEMY];
 MovableObject bullets[MAX_BULLET];
+MovableObject sp_bullets[MAX_SP_BULLET];
 MovableObject iss[MAX_ENEMY];
 MovableObject ufo;
 MovableObject ufo_enemies[MAX_ENEMY];
@@ -312,6 +316,8 @@ void game_init(void) {
     img_bullet2 = al_load_bitmap("telebull.png");
     if (!img_bullet)
         game_abort("failed to load image: image12.png");
+    sp_bullet_tl = al_load_bitmap("bugbull_tl.png");
+    sp_bullet_ll = al_load_bitmap("bigbull_ll.png");
     
     start_img_iss = al_load_bitmap("iss.png");
     
@@ -438,22 +444,7 @@ void game_update(void) {
                     }
                 }
             }
-//            //bullet collide ufo enemy
-//            for (int j=0;j<MAX_ENEMY;j++){
-//                if(bullets[i].x>ufo_enemies[j].x-ufo_enemies[j].w/2&&bullets[i].x<ufo_enemies[j].x+ufo_enemies[j].w/2&&bullets[i].y>ufo_enemies[j].y-ufo_enemies[j].h/2&&bullets[i].y<ufo_enemies[j].y+ufo_enemies[j].h/2&&ufo_enemies[j].hidden==false){
-//
-//                    ufo_enemies[j].hit_cnt++;
-//                    bullets[i].hidden=true;
-//                    game_log("bullet hit ufo enemy at %d %d hit count%d",bullets[i].x,bullets[i].y,ufo_enemies[j].hit_cnt);
-//                    //hit count prints weird numbers but function correctly
-//                    if(ufo_enemies[j].hit_cnt==3){
-//                        ufo_enemies[j].hit_cnt=0;
-//                        ufo_enemies[j].hidden=true;
-//                        score++;
-//                        break;
-//                    }
-//                }
-//            }
+            
             //bullet collide ufo
             if ((!ufo.hidden)&&bullets[i].x > ufo.x - ufo.w / 2 && bullets[i].x < ufo.x + ufo.w / 2 && bullets[i].y > ufo.y - ufo.h / 2 && bullets[i].y < ufo.y + ufo.h / 3){
                 
@@ -472,6 +463,50 @@ void game_update(void) {
                 }
             }
         }
+        /*sp bullet*/
+        for (i=0;i<MAX_SP_BULLET;i++) {
+            if (sp_bullets[i].hidden)
+                continue;
+            sp_bullets[i].x += sp_bullets[i].vx;
+            sp_bullets[i].y += sp_bullets[i].vy;//???
+            if (sp_bullets[i].x < 0 || sp_bullets[i].y<0)
+                sp_bullets[i].hidden = true;
+            //bullet collide enemy
+            for (int j=0;j<MAX_ENEMY;j++){
+                if(sp_bullets[i].x>enemies[j].x-enemies[j].w/2&&sp_bullets[i].x<enemies[j].x+enemies[j].w/2&&sp_bullets[i].y>enemies[j].y-enemies[j].h/2&&sp_bullets[i].y<enemies[j].y+enemies[j].h/2&&enemies[j].hidden==false){
+                    
+//                    enemies[j].hit_cnt++;
+                    sp_bullets[i].hidden=true;
+                    game_log("bullet hit enemy at %d %d hit count%d",sp_bullets[i].x,sp_bullets[i].y,enemies[j].hit_cnt);
+                    //hit count prints weird numbers but function correctly
+//                    if(enemies[j].hit_cnt==3){
+                        enemies[j].hit_cnt=0;
+                        enemies[j].hidden=true;
+                        score++;
+                        break;
+//                    }
+                }
+            }
+            
+            //bullet collide ufo
+            if ((!ufo.hidden)&&sp_bullets[i].x > ufo.x - ufo.w / 2 && sp_bullets[i].x < ufo.x + ufo.w / 2 && sp_bullets[i].y > ufo.y - ufo.h / 2 && sp_bullets[i].y < ufo.y + ufo.h / 3){
+                
+                ufo.hit_cnt+=5;
+                game_log("ufo hit count = %d",ufo.hit_cnt);
+                sp_bullets[i].hidden = true;
+                //                if (ufo.hit_cnt % 3 == 0)
+                //                {
+                //                    score++;
+                //                }
+                if (ufo.hit_cnt >= 10)
+                {
+                    ufo.hidden = true;
+                    ufo_active=0;
+                    game_change_scene(SCENE_WIN);
+                }
+            }
+        }
+        
         //Update enemy coordinates
         for (i=0;i<MAX_ENEMY;i++) {
             if(!ufo_active){
@@ -601,6 +636,19 @@ void game_update(void) {
                 bullets[i].y = plane.y-(plane.h)/2;//要從中心點減一半高度
             }
         }
+        /*sp bullet*/
+        if (key_state[ALLEGRO_KEY_Z] && now - last_shoot_timestamp >= 0.3f &&score>=25) {
+            for (i = 0; i<MAX_SP_BULLET;i++) {
+                if (sp_bullets[i].hidden)
+                    break;
+            }
+            if (i < MAX_SP_BULLET) {
+                last_shoot_timestamp = now;
+                sp_bullets[i].hidden = false;
+                sp_bullets[i].x = plane.x;//從那個x射出去
+                sp_bullets[i].y = plane.y-(plane.h)/2;//要從中心點減一半高度
+            }
+        }
         /*ufo*/
         if(ufo.hidden){
             if (iss_cnt>=1&&ufo.hit_cnt==0) {
@@ -654,6 +702,8 @@ void game_draw(void) {
         draw_movable_object(ufo);
         for (i = 0; i < MAX_BULLET; i++)
             draw_movable_object(bullets[i]);
+        for (i = 0; i < MAX_SP_BULLET; i++)
+            draw_movable_object(sp_bullets[i]);
         for (i = 0; i < MAX_ENEMY; i++)
             draw_movable_object(enemies[i]);
         for (i = 0; i < MAX_ISS; i++)
@@ -752,6 +802,8 @@ void game_destroy(void) {
     al_destroy_timer(game_update_timer);
     al_destroy_event_queue(game_event_queue);
     al_destroy_display(game_display);
+    al_destroy_bitmap(sp_bullet_ll);
+    al_destroy_bitmap(sp_bullet_tl);
     free(mouse_state);
     
     /* Game over Scene resources*/
@@ -843,6 +895,22 @@ void game_change_scene(int next_scene) {
             bullets[i].vy = -3;
             bullets[i].hidden = true;
             bullets[i].hit_cnt=0;
+        }
+        /*sp bullet*/
+        for (i=0;i<MAX_SP_BULLET;i++) {
+            
+            if (character_flag){
+                sp_bullets[i].img = sp_bullet_ll;
+            }
+            else{
+                sp_bullets[i].img = sp_bullet_tl;
+            }
+            sp_bullets[i].w = al_get_bitmap_width(sp_bullets[i].img);
+            sp_bullets[i].h = al_get_bitmap_height(sp_bullets[i].img);
+            sp_bullets[i].vx = 0;
+            sp_bullets[i].vy = -3;
+            sp_bullets[i].hidden = true;
+            sp_bullets[i].hit_cnt=0;
         }
         /*iss*/
         for (i=0;i<MAX_ISS;i++){
