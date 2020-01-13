@@ -89,6 +89,12 @@ ALLEGRO_BITMAP* start_img_iss;
 ALLEGRO_BITMAP* start_img_ufo;
 ALLEGRO_BITMAP* sp_bullet_ll;
 ALLEGRO_BITMAP* sp_bullet_tl;
+//blood bar
+ALLEGRO_BITMAP* moonbloodbar;
+ALLEGRO_BITMAP* humanbloodbar;
+//skill bar
+ALLEGRO_BITMAP* einstskillbar;
+ALLEGRO_BITMAP* blskillbar;
 
 /* Game over Scene resources*/
 ALLEGRO_BITMAP* human_gameover_background;
@@ -141,6 +147,7 @@ MovableObject ufo_enemies[MAX_ENEMY];
 
 const float MAX_COOLDOWN = 0.15f;
 double last_shoot_timestamp;
+double last_skill_timestamp;
 
 /* Declare function prototypes. */
 
@@ -320,6 +327,11 @@ void game_init(void) {
     sp_bullet_ll = al_load_bitmap("bigbull_ll.png");
     
     start_img_iss = al_load_bitmap("iss.png");
+    einstskillbar = al_load_bitmap("einst.png");
+    blskillbar = al_load_bitmap("blhole.png");
+    moonbloodbar = al_load_bitmap("red_moon.png");
+    humanbloodbar = al_load_bitmap("astronautq.png");
+    
     
     /* Game Over Scene resources*/
     human_gameover_background = load_bitmap_resized("gameover_human.jpg", SCREEN_W, SCREEN_H);
@@ -471,22 +483,22 @@ void game_update(void) {
             sp_bullets[i].y += sp_bullets[i].vy;//???
             if (sp_bullets[i].x < 0 || sp_bullets[i].y<0)
                 sp_bullets[i].hidden = true;
-            //bullet collide enemy
-            for (int j=0;j<MAX_ENEMY;j++){
-                if(sp_bullets[i].x>enemies[j].x-enemies[j].w/2&&sp_bullets[i].x<enemies[j].x+enemies[j].w/2&&sp_bullets[i].y>enemies[j].y-enemies[j].h/2&&sp_bullets[i].y<enemies[j].y+enemies[j].h/2&&enemies[j].hidden==false){
-                    
-//                    enemies[j].hit_cnt++;
-                    sp_bullets[i].hidden=true;
-                    game_log("bullet hit enemy at %d %d hit count%d",sp_bullets[i].x,sp_bullets[i].y,enemies[j].hit_cnt);
-                    //hit count prints weird numbers but function correctly
-//                    if(enemies[j].hit_cnt==3){
-                        enemies[j].hit_cnt=0;
-                        enemies[j].hidden=true;
-                        score++;
-                        break;
-//                    }
-                }
-            }
+//            //spbullet collide enemy
+//            for (int j=0;j<MAX_ENEMY;j++){
+//                if(sp_bullets[i].x>enemies[j].x-enemies[j].w/2&&sp_bullets[i].x<enemies[j].x+enemies[j].w/2&&sp_bullets[i].y>enemies[j].y-enemies[j].h/2&&sp_bullets[i].y<enemies[j].y+enemies[j].h/2&&enemies[j].hidden==false){
+//
+////                    enemies[j].hit_cnt++;
+//                    sp_bullets[i].hidden=true;
+//                    game_log("bullet hit enemy at %d %d hit count%d",sp_bullets[i].x,sp_bullets[i].y,enemies[j].hit_cnt);
+//                    //hit count prints weird numbers but function correctly
+////                    if(enemies[j].hit_cnt==3){
+//                        enemies[j].hit_cnt=0;
+//                        enemies[j].hidden=true;
+//                        score++;
+//                        break;
+////                    }
+//                }
+//            }
             
             //bullet collide ufo
             if ((!ufo.hidden)&&sp_bullets[i].x > ufo.x - ufo.w / 2 && sp_bullets[i].x < ufo.x + ufo.w / 2 && sp_bullets[i].y > ufo.y - ufo.h / 2 && sp_bullets[i].y < ufo.y + ufo.h / 3){
@@ -535,6 +547,22 @@ void game_update(void) {
                     }
                     
                 }
+                // enemy collide spbullet
+                    for (int j=0;j<MAX_SP_BULLET;j++){
+                        if(enemies[i].x>sp_bullets[j].x-sp_bullets[j].w/2&&enemies[i].x<sp_bullets[j].x+sp_bullets[j].w/2&&enemies[i].y>sp_bullets[j].y-sp_bullets[j].h/2&&enemies[i].y<sp_bullets[j].y+sp_bullets[j].h/2&&sp_bullets[j].hidden==false){
+                            
+                            //                    enemies[j].hit_cnt++;
+//                            sp_bullets[i].hidden=true;
+                            game_log("bullet hit enemy at %d %d hit count%d",sp_bullets[i].x,sp_bullets[i].y,enemies[j].hit_cnt);
+                            //hit count prints weird numbers but function correctly
+                            //                    if(enemies[j].hit_cnt==3){
+                            enemies[i].hit_cnt=0;
+                            enemies[i].hidden=true;
+                            score++;
+                            break;
+                            //                    }
+                        }
+                    }
                 //enemy hit sceen down
                 if (enemies[i].x > SCREEN_W || enemies[i].y>SCREEN_H){
                     enemies[i].hidden = true;
@@ -550,49 +578,6 @@ void game_update(void) {
                 enemies[i].hidden = true;
             }
         }
-//        //ufo enemy
-//        for (i=0;i<MAX_ENEMY;i++) {
-//            if(ufo_active){
-//                if (ufo_enemies[i].hidden){
-//                    if(rand()>20000){
-//                        ufo_enemies[i].hidden=false;
-//                        ufo_enemies[i].x = ufo.x + (float)rand() / RAND_MAX * ufo.w;
-//                        ufo_enemies[i].y = ufo.y;
-//                        ufo_enemies[i].vy=(rand()%10000)*0.00015;}
-//                }
-//                else {
-//                    ufo_enemies[i].y += ufo_enemies[i].vy;
-//                    //enemy collide plane
-//                    if(plane.x>ufo_enemies[i].x-ufo_enemies[i].w/2&&plane.x<ufo_enemies[i].x+ufo_enemies[i].w/2&&plane.y>ufo_enemies[i].y-ufo_enemies[i].h/2&&plane.y<ufo_enemies[i].y+ufo_enemies[i].h/2){
-//                        plane.hit_cnt++;
-//                        game_log("plane hit count=%d",plane.hit_cnt);
-//                        plane.hidden=true;
-//                        plane.x = 400;
-//                        plane.y = 600;
-//                        plane.hidden=false;
-//                        //bug:if stay at home will still repeat count
-//                        human_blood-=2;
-//                        if(human_blood==0){
-//                            game_log("all human are dead");
-//                            game_change_scene(H_DEAD_GAMEOVER);
-//                        }
-//
-//                    }
-//                    //enemy hit sceen down
-//                    if (ufo_enemies[i].x > SCREEN_W || ufo_enemies[i].y>SCREEN_H){
-//                        ufo_enemies[i].hidden = true;
-//                        moon_blood-=2;
-//                        if(moon_blood<=0){
-//                            game_log("moon is dead");
-//                            game_change_scene(M_DEAD_GAMEOVER); //temp
-//                        }
-//                    }
-//                }
-//            }
-//            else{
-//                ufo_enemies[i].hidden = true;
-//            }
-//        }
         //iss
         for (i = 0;i<MAX_ISS;i++){
             if (score&&score%5==0&&iss[i].hidden){
@@ -615,6 +600,7 @@ void game_update(void) {
                 if(plane.x>iss[i].x-iss[i].w/2&&plane.x<iss[i].x+iss[i].w/2&&plane.y>iss[i].y-iss[i].h/2&&plane.y<iss[i].y+iss[i].h/2){
                     iss[i].hidden=true;
                     iss_cnt++;
+                    score+=5;
                     break;
                 }
             }
@@ -637,13 +623,13 @@ void game_update(void) {
             }
         }
         /*sp bullet*/
-        if (key_state[ALLEGRO_KEY_Z] && now - last_shoot_timestamp >= 0.3f &&score>=25) {
+        if (key_state[ALLEGRO_KEY_Z] && now - last_skill_timestamp >= 0.3f &&score>=15) {
             for (i = 0; i<MAX_SP_BULLET;i++) {
                 if (sp_bullets[i].hidden)
                     break;
             }
             if (i < MAX_SP_BULLET) {
-                last_shoot_timestamp = now;
+                last_skill_timestamp = now;
                 sp_bullets[i].hidden = false;
                 sp_bullets[i].x = plane.x;//從那個x射出去
                 sp_bullets[i].y = plane.y-(plane.h)/2;//要從中心點減一半高度
@@ -651,14 +637,22 @@ void game_update(void) {
         }
         /*ufo*/
         if(ufo.hidden){
-            if (iss_cnt>=1&&ufo.hit_cnt==0) {
+            if (iss_cnt>=2&&ufo.hit_cnt==0) {
                 ufo.hidden=false;
                 ufo_active=1;
-//                ufo.hit_cnt=0;
             }
         }
         else{
             ufo.y+=ufo.vy;
+            //ufo collide screen down
+            if (ufo.x > SCREEN_W || ufo.y>SCREEN_H){
+                ufo.hidden = true;
+                while(moon_blood) moon_blood--;
+                if(moon_blood==0){
+                    game_log("moon is dead");
+                    game_change_scene(M_DEAD_GAMEOVER); //temp
+                }
+            }
         }
         
     }
@@ -698,6 +692,53 @@ void game_draw(void) {
             al_draw_bitmap(start_img_background, 0, 0, 0);
         }
         
+        
+//        for (i = 0; i < MAX_ENEMY; i++)
+//            draw_movable_object(ufo_enemies[i]);
+        //human blood bar
+//        char humanblood[MAX_TEXT]="Human Blood:";
+//        char buff[MAX_TEXT]="";
+//        sprintf(buff,"%d", human_blood);
+//        strcat(humanblood, buff);
+//        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, humanblood);
+        for(i=0;i<human_blood;i++){
+            al_draw_bitmap(humanbloodbar, 40+50*i, 480, 0);
+        }
+        //score
+        char score_text[MAX_TEXT]="Score:";
+        char buff2[MAX_TEXT]="";
+        sprintf(buff2,"%d", score);
+        strcat(score_text, buff2);
+        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), SCREEN_W-200, 30, 0, score_text);
+        //mooon blood bar
+//        char moon_text[MAX_TEXT]="Moon Blood:";
+//        char buff3[MAX_TEXT]="";
+//        sprintf(buff3,"%d", moon_blood);
+//        strcat(moon_text, buff3);
+//        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 100, 0, moon_text);
+        for(i=0;i<moon_blood;i++){
+            al_draw_bitmap(moonbloodbar, 40+50*i, 545, 0);
+        }
+        //skill bar
+        if (score>=15){
+            if (character_flag){
+                al_draw_bitmap(blskillbar, 32, 350, 0);
+            }
+            else{
+                al_draw_bitmap(einstskillbar, 27, 325, 0);
+            }
+        }
+        //iss
+        //        double now_time = al_get_time();
+//        char iss_text[MAX_TEXT]="ISS:";
+//        char buff4[MAX_TEXT]="";
+//        sprintf(buff4,"%d", iss_cnt);
+//        strcat(iss_text, buff4);
+//        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, iss_text);
+        for(i=0;i<iss_cnt;i++){
+            al_draw_bitmap(start_img_iss, 40+80*i, 35, 0);
+        }
+        
         draw_movable_object(plane);
         draw_movable_object(ufo);
         for (i = 0; i < MAX_BULLET; i++)
@@ -708,33 +749,6 @@ void game_draw(void) {
             draw_movable_object(enemies[i]);
         for (i = 0; i < MAX_ISS; i++)
             draw_movable_object(iss[i]);
-//        for (i = 0; i < MAX_ENEMY; i++)
-//            draw_movable_object(ufo_enemies[i]);
-        //human blood bar
-        char humanblood[MAX_TEXT]="Human Blood:";
-        char buff[MAX_TEXT]="";
-        sprintf(buff,"%d", human_blood);
-        strcat(humanblood, buff);
-        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 50, 0, humanblood);
-        //score
-        char score_text[MAX_TEXT]="Score:";
-        char buff2[MAX_TEXT]="";
-        sprintf(buff2,"%d", score);
-        strcat(score_text, buff2);
-        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), SCREEN_W-200, 30, 0, score_text);
-        //mooon blood bar
-        char moon_text[MAX_TEXT]="Moon Blood:";
-        char buff3[MAX_TEXT]="";
-        sprintf(buff3,"%d", moon_blood);
-        strcat(moon_text, buff3);
-        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, SCREEN_H - 100, 0, moon_text);
-        //iss
-        //        double now_time = al_get_time();
-        char iss_text[MAX_TEXT]="ISS:";
-        char buff4[MAX_TEXT]="";
-        sprintf(buff4,"%d", iss_cnt);
-        strcat(iss_text, buff4);
-        al_draw_text(font_pirulen_24, al_map_rgb(255, 255, 255), 20, 30, 0, iss_text);
     }
     
     
@@ -756,13 +770,13 @@ void game_draw(void) {
     }
     else if (active_scene == H_DEAD_GAMEOVER){
         al_draw_bitmap(human_gameover_background, 0, 0, 0);
-        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "YOU ARE DEAD!");
-        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
+//        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "YOU ARE DEAD!");
+//        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
     }
     else if (active_scene == M_DEAD_GAMEOVER){
         al_draw_bitmap(moon_gameover_background, 0, 0, 0);
-        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "THE MOON IS DESTROYED!");
-        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
+//        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "THE MOON IS DESTROYED!");
+//        al_draw_text(font_pirulen_32, al_map_rgb(255, 255, 255), SCREEN_W / 2, SCREEN_H/2+40, ALLEGRO_ALIGN_CENTER, "PRESS ENTER TO TRY AGAIN");
     }
     else if (active_scene == SCENE_WIN){
         al_draw_bitmap(win_astronaut, 0, 0, 0);
@@ -804,6 +818,11 @@ void game_destroy(void) {
     al_destroy_display(game_display);
     al_destroy_bitmap(sp_bullet_ll);
     al_destroy_bitmap(sp_bullet_tl);
+    al_destroy_bitmap(moonbloodbar);
+    al_destroy_bitmap(humanbloodbar);
+    //skill bar
+    al_destroy_bitmap(einstskillbar);
+    al_destroy_bitmap(blskillbar);
     free(mouse_state);
     
     /* Game over Scene resources*/
@@ -960,6 +979,12 @@ void on_key_down(int keycode) {
         if (keycode == ALLEGRO_KEY_ENTER)
             game_change_scene(SCENE_MENU);
     }
+    //debug
+//    else if (active_scene == SCENE_START){
+//        if (keycode == ALLEGRO_KEY_T){
+//            score++;
+//        }
+//    }
 }
 
 void on_mouse_down(int btn, int x, int y) {

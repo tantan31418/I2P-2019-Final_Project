@@ -30,6 +30,10 @@
 		B205FAED23CBBEDC00312C92 /* ufoenemy.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEC23CBBEDC00312C92 /* ufoenemy.png */; };
 		B205FAF023CBCA1700312C92 /* bigbull_ll.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEE23CBCA1700312C92 /* bigbull_ll.png */; };
 		B205FAF123CBCA1700312C92 /* bugbull_tl.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAEF23CBCA1700312C92 /* bugbull_tl.png */; };
+		B205FAF623CC27D300312C92 /* blhole.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAF223CC27D200312C92 /* blhole.png */; };
+		B205FAF723CC27D300312C92 /* einst.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAF323CC27D300312C92 /* einst.png */; };
+		B205FAF823CC27D300312C92 /* red_moon.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAF423CC27D300312C92 /* red_moon.png */; };
+		B205FAF923CC27D300312C92 /* astronautq.png in Resources */ = {isa = PBXBuildFile; fileRef = B205FAF523CC27D300312C92 /* astronautq.png */; };
 		B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22561A423A4C77B0035BB7F /* Assets.xcassets */; };
 		B22561A823A4C77B0035BB7F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22561A623A4C77B0035BB7F /* MainMenu.xib */; };
 		B22561DA23A4C8720035BB7F /* liballegro_dialog.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B22561B323A4C8710035BB7F /* liballegro_dialog.5.2.dylib */; };
@@ -108,6 +112,10 @@
 		B205FAEC23CBBEDC00312C92 /* ufoenemy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ufoenemy.png; path = final_project_test/ufoenemy.png; sourceTree = "<group>"; };
 		B205FAEE23CBCA1700312C92 /* bigbull_ll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bigbull_ll.png; path = final_project_test/bigbull_ll.png; sourceTree = "<group>"; };
 		B205FAEF23CBCA1700312C92 /* bugbull_tl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bugbull_tl.png; path = final_project_test/bugbull_tl.png; sourceTree = "<group>"; };
+		B205FAF223CC27D200312C92 /* blhole.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blhole.png; path = final_project_test/blhole.png; sourceTree = "<group>"; };
+		B205FAF323CC27D300312C92 /* einst.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = einst.png; path = final_project_test/einst.png; sourceTree = "<group>"; };
+		B205FAF423CC27D300312C92 /* red_moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red_moon.png; path = final_project_test/red_moon.png; sourceTree = "<group>"; };
+		B205FAF523CC27D300312C92 /* astronautq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = astronautq.png; path = final_project_test/astronautq.png; sourceTree = "<group>"; };
 		B225619E23A4C77A0035BB7F /* final_project_test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = final_project_test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B22561A423A4C77B0035BB7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B22561A723A4C77B0035BB7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -228,6 +236,10 @@
 				B205FAB823C9E4DC00312C92 /* asteroid_50.png */,
 				B205FABA23C9F14000312C92 /* icons8-lunar-lander-64.png */,
 				B225620123A4C8AC0035BB7F /* main.c */,
+				B205FAF523CC27D300312C92 /* astronautq.png */,
+				B205FAF223CC27D200312C92 /* blhole.png */,
+				B205FAF323CC27D300312C92 /* einst.png */,
+				B205FAF423CC27D300312C92 /* red_moon.png */,
 				B205FAEC23CBBEDC00312C92 /* ufoenemy.png */,
 				B205FAE823CBB7E400312C92 /* lhc_bull.png */,
 				B205FAE923CBB7E400312C92 /* telebull.png */,
@@ -384,6 +396,7 @@
 				B205FAB323C9DBBC00312C92 /* moonbackground_0.jpg in Resources */,
 				B205FAD123CAF29D00312C92 /* iss.png in Resources */,
 				B205FAB923C9E4DC00312C92 /* asteroid_50.png in Resources */,
+				B205FAF823CC27D300312C92 /* red_moon.png in Resources */,
 				B205FAD523CB16AE00312C92 /* coverjpg.jpg in Resources */,
 				B22561A523A4C77B0035BB7F /* Assets.xcassets in Resources */,
 				B205FAE323CB91BF00312C92 /* winastronaut.png in Resources */,
@@ -400,15 +413,18 @@
 				B225621A23A5D11B0035BB7F /* plane.png in Resources */,
 				B205FAC523CA184C00312C92 /* moondying.jpg in Resources */,
 				B225621723A5D11B0035BB7F /* settings.png in Resources */,
+				B205FAF923CC27D300312C92 /* astronautq.png in Resources */,
 				B225621123A5D11B0035BB7F /* image12.png in Resources */,
 				B205FAF123CBCA1700312C92 /* bugbull_tl.png in Resources */,
 				B205FAF023CBCA1700312C92 /* bigbull_ll.png in Resources */,
+				B205FAF623CC27D300312C92 /* blhole.png in Resources */,
 				B205FAED23CBBEDC00312C92 /* ufoenemy.png in Resources */,
 				B225621623A5D11B0035BB7F /* smallfighter0006.png in Resources */,
 				B205FADD23CB2C2C00312C92 /* ll_line.png in Resources */,
 				B205FABD23C9FD6700312C92 /* gameover_human.jpg in Resources */,
 				B205FAEB23CBB7E400312C92 /* telebull.png in Resources */,
 				B205FADC23CB2C2C00312C92 /* tl_line.png in Resources */,
+				B205FAF723CC27D300312C92 /* einst.png in Resources */,
 				B205FAC123CA130000312C92 /* moon_dead.jpg in Resources */,
 				B205FAE123CB7B5900312C92 /* ufo.png in Resources */,
 				B205FAE723CBAF6600312C92 /* help.png in Resources */,
