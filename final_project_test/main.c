@@ -258,7 +258,7 @@ void allegro5_init(void) {
     const unsigned m_buttons = al_get_mouse_num_buttons();
     game_log("There are total %u supported mouse buttons", m_buttons);
     // mouse_state[0] will not be used.
-    mouse_state = malloc((m_buttons + 1) * sizeof(bool));
+    mouse_state =(bool *) malloc((m_buttons + 1) * sizeof(bool));
     memset(mouse_state, false, (m_buttons + 1) * sizeof(bool));
     
     // Register display, timer, keyboard, mouse events to the event queue.
